@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Blue Crew Showdown — Dodgers Rest-of-Season League</title>
+<style>
+  :root{
+    --blue:#005A9C; --blue-dark:#00437a; --blue-light:#e8f1f8;
+    --red:#EF3E42; --ink:#14232f; --muted:#5b7284; --line:#d9e4ec;
+    --bg:#f4f8fb; --card:#ffffff; --gold:#c69214; --green:#1a7f4e;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  body{margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink);}
+  header{background:linear-gradient(135deg,var(--blue-dark),var(--blue)); color:#fff; padding:18px 16px 12px; text-align:center;}
+  header h1{margin:0; font-size:22px; letter-spacing:.3px;}
+  header p{margin:4px 0 0; font-size:12.5px; opacity:.85;}
+  nav{display:flex; background:var(--blue-dark); position:sticky; top:0; z-index:10;}
+  nav button{flex:1; background:none; border:none; color:#bcd6ea; padding:12px 4px; font-size:13px; font-weight:600; cursor:pointer; border-bottom:3px solid transparent;}
+  nav button.active{color:#fff; border-bottom-color:var(--gold);}
+  main{max-width:640px; margin:0 auto; padding:14px 12px 60px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:12px;}
+  .card h2{margin:0 0 8px; font-size:16px; color:var(--blue-dark);}
+  .muted{color:var(--muted); font-size:13px;}
+  input[type=text]{width:100%; padding:11px 12px; border:1.5px solid var(--line); border-radius:9px; font-size:16px;}
+  .btn{display:inline-block; background:var(--blue); color:#fff; border:none; border-radius:9px; padding:11px 18px; font-size:15px; font-weight:700; cursor:pointer;}
+  .btn:disabled{background:#9db8cc; cursor:not-allowed;}
+  .btn.secondary{background:#eef4f9; color:var(--blue-dark); border:1.5px solid var(--line);}
+  .btn.danger{background:var(--red);}
+  .btn.small{padding:7px 12px; font-size:13px;}
+  .row{display:flex; gap:8px; align-items:center;}
+  .budgetbar{height:12px; background:#e3ecf3; border-radius:6px; overflow:hidden; margin:6px 0;}
+  .budgetbar>div{height:100%; background:linear-gradient(90deg,var(--blue),var(--red)); transition:width .25s;}
+  .ptable{width:100%; border-collapse:collapse; font-size:13.5px;}
+  .ptable th{text-align:left; color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.5px; padding:6px 4px; border-bottom:1px solid var(--line);}
+  .ptable td{padding:8px 4px; border-bottom:1px solid #edf3f8; vertical-align:middle;}
+  .price{font-weight:800; color:var(--blue-dark); white-space:nowrap;}
+  .pos{display:inline-block; background:var(--blue-light); color:var(--blue-dark); font-size:10.5px; font-weight:700; border-radius:5px; padding:2px 6px; margin-left:6px;}
+  .il{display:inline-block; background:#fdeaea; color:#b3282c; font-size:10px; font-weight:700; border-radius:5px; padding:2px 6px; margin-left:4px;}
+  .addbtn{background:var(--blue); color:#fff; border:none; border-radius:8px; width:34px; height:30px; font-size:17px; font-weight:800; cursor:pointer;}
+  .addbtn.remove{background:var(--red);}
+  .addbtn:disabled{background:#c3d4e2;}
+  .lb-item{border:1px solid var(--line); border-radius:12px; margin-bottom:10px; overflow:hidden; background:#fff;}
+  .lb-head{display:flex; align-items:center; gap:10px; padding:12px; cursor:pointer;}
+  .rank{width:30px; height:30px; border-radius:50%; background:var(--blue-light); color:var(--blue-dark); font-weight:800; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0;}
+  .rank.r1{background:var(--gold); color:#fff;} .rank.r2{background:#9fb3c8; color:#fff;} .rank.r3{background:#b0793a; color:#fff;}
+  .lb-name{font-weight:700; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis;}
+  .lb-pts{font-weight:800; color:var(--blue-dark); font-size:16px;}
+  .lb-bar{height:6px; background:#eef3f8;} .lb-bar>div{height:100%; background:var(--blue);}
+  .lb-detail{padding:4px 12px 12px; display:none; background:#fbfdfe;}
+  .toast{position:fixed; bottom:16px; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; padding:10px 18px; border-radius:10px; font-size:14px; z-index:99; max-width:90%; text-align:center;}
+  .pill{display:inline-block; border-radius:999px; padding:3px 10px; font-size:12px; font-weight:700;}
+  .pill.ok{background:#e3f4ea; color:var(--green);} .pill.warn{background:#fdeaea; color:#b3282c;}
+  .roster-chip{display:flex; justify-content:space-between; align-items:center; padding:7px 10px; background:var(--blue-light); border-radius:8px; margin-bottom:6px; font-size:14px;}
+  .spin{text-align:center; padding:24px; color:var(--muted);}
+  h3.tier{font-size:12px; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin:14px 0 4px;}
+  .rules p{font-size:14px; line-height:1.55; margin:8px 0;}
+  .rules table{width:100%; font-size:13px; border-collapse:collapse;}
+  .rules td{padding:5px 6px; border-bottom:1px solid #edf3f8;}
+</style>
+</head>
+<body>
+<header>
+  <h1>⚾ Blue Crew Showdown</h1>
+  <p>Dodgers rest-of-season fantasy • scoring starts Jul 30, 2026</p>
+</header>
+<nav>
+  <button id="tab-squad" class="active" onclick="showTab('squad')">My Squad</button>
+  <button id="tab-board" onclick="showTab('board')">Leaderboard</button>
+  <button id="tab-players" onclick="showTab('players')">Players</button>
+  <button id="tab-rules" onclick="showTab('rules')">Rules</button>
+</nav>
+<main>
+  <section id="view-squad"></section>
+  <section id="view-board" style="display:none"></section>
+  <section id="view-players" style="display:none"></section>
+  <section id="view-rules" style="display:none"></section>
+</main>
+
+<script>
+const SB_URL = "https://xazmwpozsmbrqoulizyn.supabase.co/rest/v1";
+const SB_KEY = "sb_publishable_nxpCXX6gQ8ZOWjFGdgFi3A_hcfOxoSY";
+const BUDGET = 100, ROSTER_SIZE = 6, MIN_P = 2, MIN_H = 2;
+const START_DATE = "2026-07-30";           // scoring starts
+const SEASON_END = "2026-09-30";
+let players = [], me = null, myPicks = [], allManagers = [], allPicks = [];
+let statsCache = null, statsCacheTime = 0;
+
+const $ = id => document.getElementById(id);
+function esc(s){ const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; }
+
+async function sb(path, opts={}){
+  const r = await fetch(SB_URL + path, {
+    ...opts,
+    headers: { "apikey": SB_KEY, "Authorization": "Bearer "+SB_KEY,
+      "Content-Type": "application/json", "Prefer": "return=representation", ...(opts.headers||{}) }
+  });
+  if(!r.ok){ const t = await r.text(); throw new Error(r.status + " " + t); }
+  const txt = await r.text();
+  return txt ? JSON.parse(txt) : null;
+}
+
+function toast(msg, ms=2600){
+  document.querySelectorAll('.toast').forEach(t=>t.remove());
+  const t = document.createElement('div'); t.className='toast'; t.textContent=msg;
+  document.body.appendChild(t); setTimeout(()=>t.remove(), ms);
+}
+
+function showTab(name){
+  ['squad','board','players','rules'].forEach(n=>{
+    $('view-'+n).style.display = n===name ? '' : 'none';
+    $('tab-'+n).classList.toggle('active', n===name);
+  });
+  if(name==='board') renderBoard();
+  if(name==='players') renderPlayers();
+}
+
+/* ---------- identity ---------- */
+function loadMe(){ try{ return JSON.parse(localStorage.getItem('bcs_me')); }catch(e){ return null; } }
+function saveMe(m){ localStorage.setItem('bcs_me', JSON.stringify(m)); me = m; }
+
+/* ---------- squad tab ---------- */
+function playerById(id){ return players.find(p=>p.id===id); }
+function picksTotal(picks){ return picks.reduce((s,id)=>s+(playerById(id)?.price||0),0); }
+function countRole(picks, role){
+  return picks.filter(id=>{ const p=playerById(id); return p && (p.role===role || p.role==='twp'); }).length;
+}
+function validateSquad(picks){
+  const errs = [];
+  if(picks.length !== ROSTER_SIZE) errs.push(`Pick exactly ${ROSTER_SIZE} players (${picks.length} so far)`);
+  if(picksTotal(picks) > BUDGET) errs.push(`Over budget by $${picksTotal(picks)-BUDGET}`);
+  if(countRole(picks,'pitcher') < MIN_P) errs.push(`Need at least ${MIN_P} pitchers`);
+  if(countRole(picks,'hitter') < MIN_H) errs.push(`Need at least ${MIN_H} hitters`);
+  return errs;
+}
+
+function renderSquad(){
+  const v = $('view-squad');
+  if(!me){
+    v.innerHTML = `
+      <div class="card">
+        <h2>Join the league</h2>
+        <p class="muted">Enter your name to start drafting. You get <b>$${BUDGET}</b> to buy <b>${ROSTER_SIZE} Dodgers</b>. Stars cost more — bargains win leagues.</p>
+        <div class="row" style="margin-top:10px">
+          <input type="text" id="join-name" placeholder="Your name" maxlength="24">
+          <button class="btn" onclick="joinLeague()">Join</button>
+        </div>
+        <div id="resume-area" style="margin-top:10px"></div>
+      </div>`;
+    return;
+  }
+  const total = picksTotal(myPicks), left = BUDGET-total;
+  const errs = validateSquad(myPicks);
+  const locked = me.locked;
+  const chips = myPicks.map(id=>{ const p=playerById(id); if(!p) return '';
+    return `<div class="roster-chip"><span>${esc(p.name)}<span class="pos">${p.pos}</span></span>
+      <span class="row"><span class="price">$${p.price}</span>${locked?'':`<button class="addbtn remove" onclick="togglePick(${p.id})">−</button>`}</span></div>`;
+  }).join('') || '<p class="muted">No players yet — grab some below.</p>';
+
+  v.innerHTML = `
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0">${esc(me.name)}'s Squad</h2>
+        ${locked ? '<span class="pill ok">🔒 Locked in</span>' : '<span class="pill warn">Drafting</span>'}
+      </div>
+      <div class="budgetbar"><div style="width:${Math.min(100,total)}%"></div></div>
+      <div class="row" style="justify-content:space-between; font-size:13px">
+        <span>Spent: <b>$${total}</b></span><span>Remaining: <b style="color:${left<0?'var(--red)':'var(--green)'}">$${left}</b></span>
+      </div>
+      <div style="margin-top:10px">${chips}</div>
+      ${locked ? '<p class="muted" style="margin-top:8px">Your squad is final. Scoreboard updates automatically from real games.</p>' : `
+        <div style="margin-top:10px">
+          ${errs.length ? `<p class="muted">⚠️ ${errs.join(' • ')}</p>` : '<p class="muted">✅ Valid squad — lock it in when you\'re ready!</p>'}
+          <div class="row" style="margin-top:6px">
+            <button class="btn" ${errs.length?'disabled':''} onclick="lockSquad()">🔒 Lock in squad</button>
+            <button class="btn secondary small" onclick="saveDraft(true)">Save draft</button>
+          </div>
+        </div>`}
+    </div>
+    ${locked ? '' : `<div class="card"><h2>Player market</h2><p class="muted">Tap + to buy. IL = on injured list (discounted comeback bets).</p><div id="market"></div></div>`}
+  `;
+  if(!locked) renderMarket();
+}
+
+function renderMarket(){
+  const el = $('market'); if(!el) return;
+  const tiers = [[25,999,'💎 Superstars'],[12,24,'⭐ Stars'],[6,11,'🔧 Solid pieces'],[0,5,'💰 Bargain bin']];
+  el.innerHTML = tiers.map(([lo,hi,label])=>{
+    const rows = players.filter(p=>p.price>=lo && p.price<=hi).sort((a,b)=>b.price-a.price).map(p=>{
+      const owned = myPicks.includes(p.id);
+      const cantAfford = !owned && (picksTotal(myPicks)+p.price > BUDGET || myPicks.length>=ROSTER_SIZE);
+      return `<tr><td>${esc(p.name)}<span class="pos">${p.pos}</span>${p.status!=='Active'?`<span class="il">${p.status}</span>`:''}</td>
+        <td class="price">$${p.price}</td>
+        <td style="text-align:right"><button class="addbtn ${owned?'remove':''}" ${cantAfford?'disabled':''}
+          onclick="togglePick(${p.id})">${owned?'−':'+'}</button></td></tr>`;
+    }).join('');
+    return rows ? `<h3 class="tier">${label}</h3><table class="ptable"><tbody>${rows}</tbody></table>` : '';
+  }).join('');
+}
+
+async function joinLeague(){
+  const name = $('join-name').value.trim();
+  if(!name){ toast('Enter your name first'); return; }
+  try{
+    const rows = await sb('/dodgers_managers', { method:'POST', body: JSON.stringify({name}) });
+    saveMe(rows[0]); myPicks=[]; renderSquad(); toast('Welcome to the league, '+name+'!');
+  }catch(e){
+    if(String(e).includes('23505') || String(e).includes('duplicate')){
+      const existing = await sb('/dodgers_managers?name=eq.'+encodeURIComponent(name));
+      $('resume-area').innerHTML = `<p class="muted">That name is already in the league. Is it you?</p>
+        <button class="btn secondary small" onclick='resumeAs(${JSON.stringify(existing[0]).replace(/'/g,"&#39;")})'>Yes, resume as ${esc(name)}</button>`;
+    } else toast('Could not join: '+e.message);
+  }
+}
+async function resumeAs(m){
+  saveMe(m);
+  const picks = await sb('/dodgers_picks?manager_id=eq.'+m.id);
+  myPicks = picks.map(p=>p.player_id);
+  renderSquad(); toast('Welcome back, '+m.name+'!');
+}
+
+function togglePick(id){
+  if(me?.locked) return;
+  if(myPicks.includes(id)) myPicks = myPicks.filter(x=>x!==id);
+  else{
+    if(myPicks.length>=ROSTER_SIZE){ toast('Roster full — remove someone first'); return; }
+    const p = playerById(id);
+    if(picksTotal(myPicks)+p.price > BUDGET){ toast("Can't afford "+p.name); return; }
+    myPicks.push(id);
+  }
+  renderSquad();
+}
+
+async function saveDraft(showMsg){
+  if(!me) return;
+  await sb('/dodgers_picks?manager_id=eq.'+me.id, { method:'DELETE' });
+  if(myPicks.length){
+    await sb('/dodgers_picks', { method:'POST',
+      body: JSON.stringify(myPicks.map(id=>({manager_id:me.id, player_id:id, price:playerById(id).price}))) });
+  }
+  if(showMsg) toast('Draft saved — you can keep tweaking');
+}
+
+async function lockSquad(){
+  const errs = validateSquad(myPicks);
+  if(errs.length){ toast(errs[0]); return; }
+  if(!confirm('Lock in your squad? No changes after this!')) return;
+  await saveDraft(false);
+  const rows = await sb('/dodgers_managers?id=eq.'+me.id, { method:'PATCH', body: JSON.stringify({locked:true}) });
+  saveMe(rows[0]); renderSquad(); toast('🎉 Squad locked! Good luck!');
+}
+
+/* ---------- scoring ---------- */
+function parseIP(ip){ if(!ip) return 0; const [w,f]=String(ip).split('.'); return (parseInt(w)||0)*3 + (parseInt(f)||0); }
+function hitPts(s){
+  const singles = (s.hits||0)-(s.doubles||0)-(s.triples||0)-(s.homeRuns||0);
+  return singles*3 + (s.doubles||0)*5 + (s.triples||0)*8 + (s.homeRuns||0)*10
+       + (s.runs||0)*2 + (s.rbi||0)*2 + (s.baseOnBalls||0)*2 + (s.hitByPitch||0)*2 + (s.stolenBases||0)*5;
+}
+function pitchPts(s){
+  return parseIP(s.inningsPitched)*0.75 + (s.strikeOuts||0)*2 + (s.wins||0)*4
+       + (s.saves||0)*8 + (s.holds||0)*4 - (s.earnedRuns||0)*2;
+}
+function fmtDate(d){ const [y,m,day]=d.split('-'); return `${m}/${day}/${y}`; }
+
+async function fetchPlayerPoints(ids){
+  const now = Date.now();
+  if(statsCache && now-statsCacheTime < 5*60*1000) return statsCache;
+  const today = new Date();
+  let end = today.toISOString().slice(0,10);
+  if(end > SEASON_END) end = SEASON_END;
+  const startD = fmtDate(START_DATE), endD = fmtDate(end);
+  const results = {};
+  await Promise.all(ids.map(async id=>{
+    try{
+      const r = await fetch(`https://statsapi.mlb.com/api/v1/people/${id}/stats?stats=byDateRange&group=hitting,pitching&startDate=${startD}&endDate=${endD}&season=2026`);
+      const j = await r.json();
+      let pts = 0, detail = [];
+      (j.stats||[]).forEach(g=>{
+        const grp = g.group?.displayName;
+        (g.splits||[]).forEach(sp=>{
+          const s = sp.stat||{};
+          if(grp==='hitting' && (s.atBats||s.plateAppearances)){ const p=hitPts(s); pts+=p; detail.push(`${s.homeRuns||0} HR, ${s.rbi||0} RBI, ${s.runs||0} R`); }
+          if(grp==='pitching' && s.inningsPitched){ const p=pitchPts(s); pts+=p; detail.push(`${s.inningsPitched} IP, ${s.strikeOuts||0} K, ${s.wins||0} W, ${s.saves||0} SV`); }
+        });
+      });
+      results[id] = { pts: Math.round(pts*10)/10, detail: detail.join(' • ') };
+    }catch(e){ results[id] = { pts: 0, detail: 'stats unavailable' }; }
+  }));
+  statsCache = results; statsCacheTime = now;
+  return results;
+}
+
+/* ---------- leaderboard ---------- */
+async function renderBoard(){
+  const v = $('view-board');
+  v.innerHTML = '<div class="spin">Crunching real MLB stats… ⚾</div>';
+  try{
+    [allManagers, allPicks] = await Promise.all([ sb('/dodgers_managers?order=created_at'), sb('/dodgers_picks') ]);
+    const ownedIds = [...new Set(allPicks.map(p=>p.player_id))];
+    const pts = ownedIds.length ? await fetchPlayerPoints(ownedIds) : {};
+    const rows = allManagers.map(m=>{
+      const picks = allPicks.filter(p=>p.manager_id===m.id);
+      const total = picks.reduce((s,p)=>s+(pts[p.player_id]?.pts||0),0);
+      return { m, picks, total: Math.round(total*10)/10 };
+    }).sort((a,b)=>b.total-a.total);
+    const max = Math.max(1, ...rows.map(r=>r.total));
+    const today = new Date().toISOString().slice(0,10);
+    const preseason = today < START_DATE;
+    v.innerHTML = `
+      ${preseason?'<div class="card"><p class="muted" style="margin:0">🕐 Scoring starts <b>July 30</b> — points appear after the first games.</p></div>':''}
+      ${rows.length? rows.map((r,i)=>`
+        <div class="lb-item">
+          <div class="lb-head" onclick="this.parentNode.querySelector('.lb-detail').style.display = this.parentNode.querySelector('.lb-detail').style.display==='block'?'none':'block'">
+            <div class="rank r${i+1}">${i+1}</div>
+            <div class="lb-name">${esc(r.m.name)} ${r.m.locked?'🔒':'<span class="muted" style="font-weight:400">(drafting)</span>'}</div>
+            <div class="lb-pts">${r.total} pts</div>
+          </div>
+          <div class="lb-bar"><div style="width:${(r.total/max)*100}%"></div></div>
+          <div class="lb-detail">
+            ${r.picks.length ? `<table class="ptable"><tbody>${ r.picks
+              .map(p=>({p, pl:playerById(p.player_id), pp:pts[p.player_id]}))
+              .sort((a,b)=>(b.pp?.pts||0)-(a.pp?.pts||0))
+              .map(({p,pl,pp})=>`<tr><td>${esc(pl?.name||p.player_id)}<span class="pos">${pl?.pos||''}</span><br>
+                <span class="muted" style="font-size:11px">${pp?.detail||'no games yet'}</span></td>
+                <td class="price" style="text-align:right">${pp?.pts??0}</td></tr>`).join('') }</tbody></table>`
+            : '<p class="muted">No players drafted yet.</p>'}
+          </div>
+        </div>`).join('') : '<div class="card"><p class="muted">No managers yet — be the first to join!</p></div>'}
+      <p class="muted" style="text-align:center">Points from real games since Jul 30 • updates live from MLB stats<br>
+      <button class="btn secondary small" style="margin-top:8px" onclick="statsCache=null;renderBoard()">↻ Refresh</button></p>`;
+  }catch(e){ v.innerHTML = `<div class="card"><p class="muted">Couldn't load the leaderboard (${esc(e.message)}). Pull to refresh or try again.</p></div>`; }
+}
+
+/* ---------- players tab ---------- */
+async function renderPlayers(){
+  const v = $('view-players');
+  v.innerHTML = '<div class="spin">Loading player board…</div>';
+  const pts = await fetchPlayerPoints(players.map(p=>p.id));
+  const sorted = [...players].sort((a,b)=>(pts[b.id]?.pts||0)-(pts[a.id]?.pts||0) || b.price-a.price);
+  v.innerHTML = `<div class="card"><h2>Player board</h2>
+    <p class="muted">Rest-of-season fantasy points vs. what they cost. Find the steals.</p>
+    <table class="ptable"><thead><tr><th>Player</th><th>Cost</th><th style="text-align:right">Pts</th></tr></thead><tbody>
+    ${sorted.map(p=>`<tr><td>${esc(p.name)}<span class="pos">${p.pos}</span>${p.status!=='Active'?`<span class="il">${p.status}</span>`:''}</td>
+      <td class="price">$${p.price}</td><td style="text-align:right;font-weight:700">${pts[p.id]?.pts??0}</td></tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+/* ---------- rules tab ---------- */
+function renderRules(){
+  $('view-rules').innerHTML = `
+  <div class="card rules">
+    <h2>How it works</h2>
+    <p>Everyone gets <b>$100</b> to buy a squad of <b>6 Dodgers</b> — at least 2 pitchers and 2 hitters (Ohtani counts as both). Better players cost more, so building a winner means finding value. Multiple managers can own the same player.</p>
+    <p>Once you <b>lock in</b>, your squad is final. Points come from real MLB games from <b>July 30 through the end of the regular season</b>. Highest total wins. 🏆</p>
+    <h2 style="margin-top:16px">Hitter scoring</h2>
+    <table><tr><td>Single</td><td><b>+3</b></td><td>Double</td><td><b>+5</b></td></tr>
+    <tr><td>Triple</td><td><b>+8</b></td><td>Home run</td><td><b>+10</b></td></tr>
+    <tr><td>Run</td><td><b>+2</b></td><td>RBI</td><td><b>+2</b></td></tr>
+    <tr><td>Walk / HBP</td><td><b>+2</b></td><td>Stolen base</td><td><b>+5</b></td></tr></table>
+    <h2 style="margin-top:16px">Pitcher scoring</h2>
+    <table><tr><td>Out recorded</td><td><b>+0.75</b></td><td>Strikeout</td><td><b>+2</b></td></tr>
+    <tr><td>Win</td><td><b>+4</b></td><td>Save</td><td><b>+8</b></td></tr>
+    <tr><td>Hold</td><td><b>+4</b></td><td>Earned run</td><td><b>−2</b></td></tr></table>
+    <p class="muted" style="margin-top:12px">Prices were set from 2026 performance so far. IL players are discounted — high risk, high reward. Stats via MLB's public API.</p>
+  </div>`;
+}
+
+/* ---------- boot ---------- */
+(async function(){
+  renderRules();
+  try{
+    players = await sb('/dodgers_players?order=price.desc');
+  }catch(e){
+    $('view-squad').innerHTML = `<div class="card"><p class="muted">Couldn't reach the league database. Check your connection and refresh.</p></div>`;
+    return;
+  }
+  me = loadMe();
+  if(me){
+    try{
+      const fresh = await sb('/dodgers_managers?id=eq.'+me.id);
+      if(fresh.length){ me = fresh[0]; localStorage.setItem('bcs_me', JSON.stringify(me));
+        const picks = await sb('/dodgers_picks?manager_id=eq.'+me.id);
+        myPicks = picks.map(p=>p.player_id);
+      } else { me = null; localStorage.removeItem('bcs_me'); }
+    }catch(e){}
+  }
+  renderSquad();
+})();
+</script>
+</body>
+</html>
