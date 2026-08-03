@@ -181,7 +181,8 @@ function headshot(id, cls){
 
 const AVATARS = ['🧢','⚾','🔥','🐐','🚀','🎯','🦾','🌴','🏆','🎲','🦖','⭐'];
 const AVA_BG  = ['#123a5e','#4a1d2e','#4a3a12','#12402b','#2f2354','#42122e','#0e3a52','#3a4212','#3f1c3a','#26364a','#0e4238','#4a3512'];
-const AVATAR_OVERRIDES = { 'blow me':'🍆', 'eat me':'🍆', 'lick me':'🍆' };
+const RING_SVG = '<svg width="30" height="30" viewBox="0 0 64 64"><circle cx="32" cy="42" r="16" fill="none" stroke="#e3a812" stroke-width="9"/><circle cx="32" cy="42" r="16" fill="none" stroke="#ffd766" stroke-width="3"/><rect x="13" y="4" width="38" height="32" rx="9" fill="#0e4da0" stroke="#ffc84a" stroke-width="5"/><text x="32" y="28" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-size="17" font-weight="900" fill="#ffd766">LA</text><circle cx="21" cy="9.5" r="1.8" fill="#fff"/><circle cx="32" cy="8" r="1.8" fill="#fff"/><circle cx="43" cy="9.5" r="1.8" fill="#fff"/><circle cx="15.5" cy="20" r="1.8" fill="#fff"/><circle cx="48.5" cy="20" r="1.8" fill="#fff"/><circle cx="21" cy="30.5" r="1.8" fill="#fff"/><circle cx="43" cy="30.5" r="1.8" fill="#fff"/></svg>';
+const AVATAR_OVERRIDES = { 'blow me':'🍆', 'eat me':'🍆', 'lick me':'🍆', 'db':RING_SVG };
 function hashName(n){ let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))>>>0; return h; }
 function avatarFor(n){
   const key = (n||'').toLowerCase().replace(/[^a-z ]/g,'').replace(/\s+/g,' ').trim();
