@@ -3,110 +3,138 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#04294a">
 <title>Blue Crew Showdown — Dodgers Rest-of-Season League</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
   :root{
-    --blue:#005A9C; --blue-dark:#04294a; --blue-mid:#0e69b0; --blue-light:#e8f1f8;
-    --red:#EF3E42; --ink:#132330; --muted:#5b7284; --line:#d9e4ec;
-    --bg:#eef4fa; --card:#ffffff; --gold:#e3a812; --gold-deep:#c69214; --green:#1a7f4e;
-    --disp:'Bebas Neue', 'Arial Narrow', sans-serif;
+    --bg:#071220; --card:#0f2236; --card2:#132a42; --line:rgba(148,190,225,.16);
+    --ink:#eaf2fa; --muted:#8ba9c0;
+    --blue:#005A9C; --blue-bright:#4da3ff; --blue-mid:#0e69b0; --blue-dark:#04294a;
+    --red:#ff5d61; --gold:#ffc84a; --gold-deep:#e3a812; --green:#3ecf8e;
+    --disp:'Bebas Neue','Arial Narrow',sans-serif;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   body{margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     background:var(--bg);
-    background-image:radial-gradient(circle at 20% -10%, #ffffff 0%, transparent 45%), radial-gradient(#d9e6f2 1px, transparent 1.2px);
-    background-size:auto, 22px 22px;
+    background-image:
+      radial-gradient(ellipse 90% 40% at 50% -5%, rgba(14,105,176,.35), transparent 60%),
+      radial-gradient(rgba(255,255,255,.035) 1px, transparent 1.3px);
+    background-size:auto, 24px 24px;
+    background-attachment:fixed;
     color:var(--ink);}
-  header{background:linear-gradient(160deg,#021c33 0%, var(--blue-dark) 30%, var(--blue) 75%, var(--blue-mid) 100%);
-    color:#fff; padding:22px 16px 16px; text-align:center; position:relative; overflow:hidden;}
-  header::before{content:'⚾'; position:absolute; font-size:130px; opacity:.08; right:-24px; top:-30px; transform:rotate(18deg);}
-  header::after{content:'⚾'; position:absolute; font-size:90px; opacity:.07; left:-18px; bottom:-30px; transform:rotate(-15deg);}
-  header h1{margin:0; font-family:var(--disp); font-size:40px; letter-spacing:2.5px; font-weight:400;
-    text-shadow:0 3px 0 rgba(0,0,0,.25); font-style:italic;}
-  header h1 .accent{color:#ffd766;}
-  .chiprow{display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin-top:8px; position:relative; z-index:1;}
-  .chip{background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.25); backdrop-filter:blur(2px);
+  header{background:linear-gradient(165deg,#021424 0%, var(--blue-dark) 35%, var(--blue) 78%, var(--blue-mid) 100%);
+    color:#fff; padding:24px 16px 18px; text-align:center; position:relative; overflow:hidden;
+    border-bottom:1px solid rgba(255,255,255,.12);}
+  header::before{content:'⚾'; position:absolute; font-size:140px; opacity:.07; right:-26px; top:-34px; transform:rotate(18deg);}
+  header::after{content:''; position:absolute; inset:auto 0 0 0; height:60px;
+    background:linear-gradient(to top, rgba(7,18,32,.55), transparent);}
+  header h1{margin:0; font-family:var(--disp); font-size:42px; letter-spacing:3px; font-weight:400; font-style:italic;
+    text-shadow:0 4px 14px rgba(0,0,0,.45), 0 2px 0 rgba(0,0,0,.3); position:relative; z-index:1;}
+  header h1 .accent{color:var(--gold);}
+  .chiprow{display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin-top:9px; position:relative; z-index:1;}
+  .chip{background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.22);
     border-radius:999px; padding:4px 12px; font-size:12px; font-weight:700; letter-spacing:.3px;}
-  nav{display:flex; background:var(--blue-dark); position:sticky; top:0; z-index:10; box-shadow:0 2px 10px rgba(2,28,51,.35);}
-  nav button{flex:1; background:none; border:none; color:#9dc0dc; padding:13px 2px 11px; font-family:var(--disp);
-    font-size:clamp(13px,4vw,17px); letter-spacing:1px; white-space:nowrap; cursor:pointer; border-bottom:3px solid transparent; transition:color .15s;}
+  nav{display:flex; background:rgba(4,24,44,.92); backdrop-filter:blur(8px); position:sticky; top:0; z-index:10;
+    border-bottom:1px solid var(--line); box-shadow:0 4px 18px rgba(0,0,0,.35);}
+  nav button{flex:1; background:none; border:none; color:#7fa3c2; padding:13px 2px 11px; font-family:var(--disp);
+    font-size:clamp(13px,4vw,17px); letter-spacing:1px; white-space:nowrap; cursor:pointer;
+    border-bottom:3px solid transparent; transition:color .15s;}
   nav button.active{color:#fff; border-bottom-color:var(--gold);}
-  main{max-width:640px; margin:0 auto; padding:14px 12px 70px;}
-  .card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:12px;
-    box-shadow:0 2px 10px rgba(0,42,92,.07);}
-  .card h2{margin:0 0 8px; font-family:var(--disp); font-size:22px; letter-spacing:1px; font-weight:400; color:var(--blue-dark);}
+  main{max-width:640px; margin:0 auto; padding:14px 12px 84px;}
+  .card{background:linear-gradient(180deg,var(--card2),var(--card)); border:1px solid var(--line); border-radius:18px;
+    padding:16px; margin-bottom:12px; box-shadow:0 6px 22px rgba(0,0,0,.35);}
+  .card h2{margin:0 0 8px; font-family:var(--disp); font-size:23px; letter-spacing:1.2px; font-weight:400; color:#fff;}
   .muted{color:var(--muted); font-size:13px;}
-  input[type=text]{width:100%; padding:12px 14px; border:2px solid var(--line); border-radius:12px; font-size:16px; outline-color:var(--blue);}
-  .btn{display:inline-block; background:linear-gradient(180deg,var(--blue-mid),var(--blue)); color:#fff; border:none;
+  input[type=text]{width:100%; padding:12px 14px; border:2px solid var(--line); border-radius:12px; font-size:16px;
+    background:#0a1a2c; color:var(--ink); outline-color:var(--blue-bright);}
+  input::placeholder{color:#5c7a94;}
+  .btn{display:inline-block; background:linear-gradient(180deg,#1d84d8,var(--blue)); color:#fff; border:none;
     border-radius:12px; padding:12px 20px; font-size:15px; font-weight:800; cursor:pointer; letter-spacing:.3px;
-    box-shadow:0 3px 0 var(--blue-dark); transition:transform .08s;}
-  .btn:active{transform:translateY(2px); box-shadow:0 1px 0 var(--blue-dark);}
-  .btn:disabled{background:#a9bfd2; box-shadow:0 3px 0 #8ba6bd; cursor:not-allowed;}
-  .btn.secondary{background:#fff; color:var(--blue-dark); border:2px solid var(--line); box-shadow:0 3px 0 var(--line);}
+    box-shadow:0 4px 14px rgba(29,132,216,.35), 0 3px 0 #033a63; transition:transform .08s;}
+  .btn:active{transform:translateY(2px); box-shadow:0 2px 8px rgba(29,132,216,.3), 0 1px 0 #033a63;}
+  .btn:disabled{background:#2a4359; box-shadow:none; color:#7d97ac; cursor:not-allowed;}
+  .btn.secondary{background:rgba(255,255,255,.06); color:var(--ink); border:1.5px solid var(--line); box-shadow:none;}
   .btn.small{padding:8px 14px; font-size:13px;}
   .row{display:flex; gap:8px; align-items:center;}
-  .budgetwrap{margin:10px 0 4px;}
-  .budgetbar{height:16px; background:#e0eaf3; border-radius:8px; overflow:hidden; position:relative;}
-  .budgetbar>div{height:100%; border-radius:8px;
-    background:repeating-linear-gradient(45deg, var(--blue) 0 12px, var(--blue-mid) 12px 24px);
-    transition:width .4s cubic-bezier(.2,.8,.3,1);}
-  .budgetbar>div.hot{background:repeating-linear-gradient(45deg, var(--red) 0 12px, #ff6a6d 12px 24px);}
-  .capline{display:flex; justify-content:space-between; font-size:13px; margin-top:6px;}
-  .bignum{font-family:var(--disp); font-size:20px; letter-spacing:.5px;}
+  .budgetwrap{margin:12px 0 4px;}
+  .budgetbar{height:16px; background:#0a1a2c; border-radius:8px; overflow:hidden; border:1px solid var(--line);}
+  .budgetbar>div{height:100%; border-radius:7px;
+    background:repeating-linear-gradient(45deg, #1d84d8 0 12px, var(--blue-mid) 12px 24px);
+    box-shadow:0 0 12px rgba(77,163,255,.5); transition:width .4s cubic-bezier(.2,.8,.3,1);}
+  .budgetbar>div.hot{background:repeating-linear-gradient(45deg, #e5484d 0 12px, var(--red) 12px 24px);
+    box-shadow:0 0 12px rgba(255,93,97,.5);}
+  .capline{display:flex; justify-content:space-between; font-size:13px; margin-top:7px; color:var(--muted);}
+  .bignum{font-family:var(--disp); font-size:21px; letter-spacing:.5px; color:var(--ink);}
   .ptable{width:100%; border-collapse:collapse; font-size:13.5px;}
-  .ptable th{text-align:left; color:var(--muted); font-size:10.5px; text-transform:uppercase; letter-spacing:.8px;
+  .ptable th{text-align:left; color:var(--muted); font-size:10.5px; text-transform:uppercase; letter-spacing:.9px;
     padding:6px 4px; border-bottom:2px solid var(--line);}
-  .ptable td{padding:9px 4px; border-bottom:1px solid #edf3f8; vertical-align:middle;}
-  .price{font-family:var(--disp); font-size:18px; letter-spacing:.5px; color:var(--blue); white-space:nowrap;}
-  .pos{display:inline-block; background:var(--blue-light); color:var(--blue-dark); font-size:10px; font-weight:800;
+  .ptable td{padding:8px 4px; border-bottom:1px solid rgba(148,190,225,.08); vertical-align:middle;}
+  .price{font-family:var(--disp); font-size:19px; letter-spacing:.5px; color:#7cc0ff; white-space:nowrap;}
+  .pos{display:inline-block; background:rgba(77,163,255,.16); color:#9fceff; font-size:10px; font-weight:800;
     border-radius:6px; padding:2px 6px; margin-left:6px; vertical-align:1px;}
-  .il{display:inline-block; background:#fdeaea; color:#b3282c; font-size:9.5px; font-weight:800; border-radius:6px;
-    padding:2px 6px; margin-left:4px; vertical-align:1px;}
-  .il.minors{background:#f0ecfc; color:#5b3ea8;}
-  .addbtn{background:linear-gradient(180deg,var(--blue-mid),var(--blue)); color:#fff; border:none; border-radius:50%;
-    width:36px; height:36px; font-size:19px; font-weight:800; cursor:pointer; box-shadow:0 2px 0 var(--blue-dark); line-height:1;}
-  .addbtn.remove{background:linear-gradient(180deg,#ff5d61,var(--red)); box-shadow:0 2px 0 #b3282c;}
-  .addbtn:disabled{background:#c3d4e2; box-shadow:0 2px 0 #a9bfd2;}
-  .lb-item{border:1px solid var(--line); border-radius:16px; margin-bottom:12px; overflow:hidden; background:#fff;
-    box-shadow:0 2px 10px rgba(0,42,92,.07);}
-  .lb-item.leader{border:2px solid var(--gold); box-shadow:0 3px 14px rgba(227,168,18,.3);}
-  .lb-head{display:flex; align-items:center; gap:10px; padding:12px; cursor:pointer;}
-  .avatar{width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-    font-size:20px; flex-shrink:0; border:2px solid #fff; box-shadow:0 0 0 2px var(--line);}
+  .il{display:inline-block; background:rgba(255,93,97,.16); color:#ff9a9d; font-size:9.5px; font-weight:800;
+    border-radius:6px; padding:2px 6px; margin-left:4px; vertical-align:1px;}
+  .il.minors{background:rgba(167,139,250,.16); color:#c4b5fd;}
+  .addbtn{background:linear-gradient(180deg,#1d84d8,var(--blue)); color:#fff; border:none; border-radius:50%;
+    width:36px; height:36px; font-size:19px; font-weight:800; cursor:pointer; line-height:1;
+    box-shadow:0 3px 10px rgba(29,132,216,.4);}
+  .addbtn.remove{background:linear-gradient(180deg,#ff7376,#e5484d); box-shadow:0 3px 10px rgba(255,93,97,.35);}
+  .addbtn:disabled{background:#2a4359; box-shadow:none; color:#7d97ac;}
+  .hs{width:42px; height:42px; border-radius:50%; object-fit:cover; background:#0a1a2c;
+    border:2px solid rgba(255,255,255,.15); flex-shrink:0; display:block;}
+  .hs.sm{width:34px; height:34px;}
+  .prow{display:flex; align-items:center; gap:10px;}
+  .lb-item{border:1px solid var(--line); border-radius:18px; margin-bottom:12px; overflow:hidden;
+    background:linear-gradient(180deg,var(--card2),var(--card)); box-shadow:0 6px 22px rgba(0,0,0,.35);
+    animation:rise .4s cubic-bezier(.2,.8,.3,1) both;}
+  @keyframes rise{ from{ opacity:0; transform:translateY(10px);} to{ opacity:1; transform:none;} }
+  .lb-item.leader{border:1.5px solid rgba(255,200,74,.65); box-shadow:0 0 24px rgba(255,200,74,.18), 0 6px 22px rgba(0,0,0,.35);}
+  .lb-head{display:flex; align-items:center; gap:10px; padding:13px; cursor:pointer;}
+  .avatar{width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:21px; flex-shrink:0; border:2px solid rgba(255,255,255,.2);}
   .medal{font-size:24px; width:28px; text-align:center; flex-shrink:0;}
   .ranknum{font-family:var(--disp); font-size:18px; color:var(--muted); width:28px; text-align:center; flex-shrink:0;}
-  .lb-name{font-weight:800; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; font-size:15px;}
+  .lb-name{font-weight:800; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; font-size:15px; color:#fff;}
   .lb-name .sub{display:block; font-size:11px; font-weight:600; color:var(--muted);}
-  .lb-pts{font-family:var(--disp); font-size:26px; letter-spacing:.5px; color:var(--blue-dark); line-height:1;}
+  .lb-pts{font-family:var(--disp); font-size:28px; letter-spacing:.5px; color:#fff; line-height:1;}
   .lb-today{font-size:11.5px; font-weight:700; text-align:right;}
-  .lb-bar{height:6px; background:#eef3f8; margin:0 12px 0;}
-  .lb-bar>div{height:100%; border-radius:0 4px 4px 0; background:linear-gradient(90deg,var(--blue-dark),var(--blue-mid)); transition:width .6s cubic-bezier(.2,.8,.3,1);}
-  .lb-item.leader .lb-bar>div{background:linear-gradient(90deg,var(--gold-deep),var(--gold));}
-  .lb-detail{padding:8px 12px 12px; display:none; background:#fbfdfe; margin-top:8px; border-top:1px dashed var(--line);}
-  .mvp{background:linear-gradient(135deg,#fff8e3,#ffefc2); border:1.5px solid #f3d47e; border-radius:16px;
-    padding:12px 14px; margin-bottom:12px; display:flex; align-items:center; gap:12px; box-shadow:0 2px 10px rgba(227,168,18,.18);}
-  .mvp .star{font-size:30px;}
-  .mvp b{font-size:15px;}
-  .mvp .pts{margin-left:auto; font-family:var(--disp); font-size:26px; color:var(--gold-deep);}
-  .toast{position:fixed; bottom:18px; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff;
-    padding:11px 20px; border-radius:12px; font-size:14px; font-weight:600; z-index:99; max-width:90%; text-align:center;
-    box-shadow:0 4px 16px rgba(0,0,0,.3);}
+  .lb-bar{height:6px; background:rgba(255,255,255,.06); margin:0 13px;}
+  .lb-bar>div{height:100%; border-radius:0 4px 4px 0; background:linear-gradient(90deg,var(--blue-mid),var(--blue-bright));
+    box-shadow:0 0 10px rgba(77,163,255,.6); transition:width .7s cubic-bezier(.2,.8,.3,1);}
+  .lb-item.leader .lb-bar>div{background:linear-gradient(90deg,var(--gold-deep),var(--gold)); box-shadow:0 0 10px rgba(255,200,74,.6);}
+  .lb-detail{padding:8px 13px 13px; display:none; background:rgba(0,0,0,.18); margin-top:9px; border-top:1px dashed var(--line);}
+  .mvp{background:linear-gradient(135deg, rgba(255,200,74,.16), rgba(227,168,18,.08)); border:1.5px solid rgba(255,200,74,.5);
+    border-radius:18px; padding:12px 14px; margin-bottom:12px; display:flex; align-items:center; gap:12px;
+    box-shadow:0 0 22px rgba(255,200,74,.14);}
+  .mvp .who b{font-size:15px; color:#fff;}
+  .mvp .who span{display:block; font-size:11px; color:var(--gold); font-weight:800; letter-spacing:1px; text-transform:uppercase;}
+  .mvp .pts{margin-left:auto; font-family:var(--disp); font-size:30px; color:var(--gold);}
+  .mvp .hs{border-color:rgba(255,200,74,.6); width:48px; height:48px;}
+  .toast{position:fixed; bottom:76px; left:50%; transform:translateX(-50%); background:#eaf2fa; color:#0a1a2c;
+    padding:11px 20px; border-radius:12px; font-size:14px; font-weight:700; z-index:99; max-width:90%; text-align:center;
+    box-shadow:0 6px 24px rgba(0,0,0,.5);}
   .pill{display:inline-block; border-radius:999px; padding:3px 10px; font-size:11.5px; font-weight:800;}
-  .pill.ok{background:#e3f4ea; color:var(--green);} .pill.warn{background:#fdeaea; color:#b3282c;}
-  .roster-chip{display:flex; justify-content:space-between; align-items:center; padding:9px 12px;
-    background:linear-gradient(90deg,var(--blue-light),#f2f8fd); border:1px solid #d4e5f2; border-radius:12px; margin-bottom:7px; font-size:14px; font-weight:600;}
-  .spin{text-align:center; padding:28px; color:var(--muted); font-weight:600;}
-  h3.tier{font-family:var(--disp); font-size:16px; letter-spacing:1.5px; color:var(--blue-dark); margin:18px 0 4px; font-weight:400;
-    border-bottom:2px solid var(--line); padding-bottom:4px;}
-  .rules p{font-size:14px; line-height:1.6; margin:8px 0;}
+  .pill.ok{background:rgba(62,207,142,.16); color:var(--green);} .pill.warn{background:rgba(255,93,97,.16); color:#ff9a9d;}
+  .roster-chip{display:flex; justify-content:space-between; align-items:center; padding:8px 10px;
+    background:rgba(255,255,255,.045); border:1px solid var(--line); border-radius:14px; margin-bottom:7px;
+    font-size:14px; font-weight:600;}
+  .spin{text-align:center; padding:30px; color:var(--muted); font-weight:600;}
+  h3.tier{font-family:var(--disp); font-size:17px; letter-spacing:2px; color:var(--gold); margin:20px 0 6px; font-weight:400;
+    border-bottom:1px solid var(--line); padding-bottom:5px;}
+  .rules p{font-size:14px; line-height:1.65; margin:8px 0;}
   .rules table{width:100%; font-size:13px; border-collapse:collapse;}
-  .rules td{padding:6px; border-bottom:1px solid #edf3f8;}
+  .rules td{padding:6px; border-bottom:1px solid rgba(148,190,225,.08);}
   .fire{font-size:12px;}
   .valuetag{font-size:10.5px; color:var(--muted); font-weight:600;}
-  footer{text-align:center; color:var(--muted); font-size:12px; padding:10px 0 26px;}
+  footer{text-align:center; color:#54718a; font-size:12px; padding:12px 0 30px;}
+  .capdock{position:fixed; bottom:0; left:0; right:0; z-index:20; background:rgba(4,24,44,.94); backdrop-filter:blur(8px);
+    border-top:1px solid var(--line); padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+    display:flex; justify-content:space-around; align-items:center; box-shadow:0 -6px 20px rgba(0,0,0,.4);}
+  .capdock .lab{font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; font-weight:700; display:block; text-align:center;}
+  .capdock .val{font-family:var(--disp); font-size:22px; text-align:center; display:block;}
   .confetti{position:fixed; top:-20px; z-index:200; border-radius:2px; pointer-events:none; animation:fall linear forwards;}
   @keyframes fall{ to{ transform:translateY(110vh) rotate(720deg); opacity:.9; } }
 </style>
@@ -133,6 +161,7 @@
   <section id="view-rules" style="display:none"></section>
   <footer>Built for the Blue Crew 💙 • real stats via MLB</footer>
 </main>
+<div id="capdock" style="display:none"></div>
 
 <script>
 const SB_URL = "https://xazmwpozsmbrqoulizyn.supabase.co/rest/v1";
@@ -145,9 +174,13 @@ let statsCache = null, statsCacheTime = 0;
 
 const $ = id => document.getElementById(id);
 function esc(s){ const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; }
+function headshot(id, cls){
+  return `<img class="hs ${cls||''}" loading="lazy" alt=""
+    src="https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_120,q_auto:best/v1/people/${id}/headshot/67/current">`;
+}
 
 const AVATARS = ['🧢','⚾','🔥','🐐','🚀','🎯','🦾','🌴','🏆','🎲','🦖','⭐'];
-const AVA_BG  = ['#dbeafe','#fde8e8','#fef3c7','#dcfce7','#ede9fe','#ffe4e6','#e0f2fe','#f1f5dc','#fce7f3','#e2e8f0','#d1fae5','#fef9c3'];
+const AVA_BG  = ['#123a5e','#4a1d2e','#4a3a12','#12402b','#2f2354','#42122e','#0e3a52','#3a4212','#3f1c3a','#26364a','#0e4238','#4a3512'];
 function hashName(n){ let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))>>>0; return h; }
 function avatarFor(n){ const h=hashName(n||'?'); return {emo:AVATARS[h%AVATARS.length], bg:AVA_BG[(h>>4)%AVA_BG.length]}; }
 
@@ -169,8 +202,8 @@ function toast(msg, ms=2600){
 }
 
 function confetti(){
-  const colors=['#005A9C','#EF3E42','#e3a812','#ffffff','#0e69b0'];
-  for(let i=0;i<70;i++){
+  const colors=['#4da3ff','#ff5d61','#ffc84a','#ffffff','#0e69b0'];
+  for(let i=0;i<80;i++){
     const c=document.createElement('div'); c.className='confetti';
     const size=6+Math.random()*7;
     c.style.cssText+=`left:${Math.random()*100}vw; width:${size}px; height:${size*0.5}px;
@@ -180,11 +213,24 @@ function confetti(){
   }
 }
 
+function countUp(el){
+  const target = parseFloat(el.dataset.t||'0');
+  if(!target){ el.textContent = target; return; }
+  const dec = Math.abs(target % 1) > 0 ? 1 : 0, dur = 750, t0 = performance.now();
+  const step = t => {
+    const k = Math.min(1, (t-t0)/dur), eased = 1-Math.pow(1-k,3);
+    el.textContent = (target*eased).toFixed(dec);
+    if(k<1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
 function showTab(name){
   ['squad','board','players','rules'].forEach(n=>{
     $('view-'+n).style.display = n===name ? '' : 'none';
     $('tab-'+n).classList.toggle('active', n===name);
   });
+  $('capdock').style.display = (name==='squad' && me && !me.locked) ? 'flex' : 'none';
   if(name==='board') renderBoard();
   if(name==='players') renderPlayers();
 }
@@ -212,6 +258,16 @@ function statusTag(p){
   const cls = (p.status==='Minors'||p.status==='Off roster') ? 'il minors' : 'il';
   return `<span class="${cls}">${p.status}</span>`;
 }
+function updateCapdock(){
+  const dock = $('capdock');
+  if(!me || me.locked){ dock.style.display='none'; return; }
+  const left = BUDGET - picksTotal(myPicks), spots = ROSTER_SIZE - myPicks.length;
+  dock.style.display = $('view-squad').style.display==='none' ? 'none' : 'flex';
+  dock.innerHTML = `
+    <div><span class="lab">Cash left</span><span class="val" style="color:${left<0?'var(--red)':'var(--green)'}">$${left}</span></div>
+    <div><span class="lab">Spots open</span><span class="val">${spots}</span></div>
+    <div><span class="lab">Squad</span><span class="val">${myPicks.length}/${ROSTER_SIZE}</span></div>`;
+}
 
 function renderSquad(){
   const v = $('view-squad');
@@ -219,13 +275,14 @@ function renderSquad(){
     v.innerHTML = `
       <div class="card">
         <h2>🎟️ Join the League</h2>
-        <p class="muted">Enter your name to start drafting. You get <b>$${BUDGET}</b> to buy <b>${ROSTER_SIZE} Dodgers</b>. Stars cost more — bargains win leagues.</p>
+        <p class="muted">Enter your name to start drafting. You get <b style="color:var(--ink)">$${BUDGET}</b> to buy <b style="color:var(--ink)">${ROSTER_SIZE} Dodgers</b>. Stars cost more — bargains win leagues.</p>
         <div class="row" style="margin-top:10px">
           <input type="text" id="join-name" placeholder="Your name" maxlength="24">
           <button class="btn" onclick="joinLeague()">Join</button>
         </div>
         <div id="resume-area" style="margin-top:10px"></div>
       </div>`;
+    updateCapdock();
     return;
   }
   const total = picksTotal(myPicks), left = BUDGET-total;
@@ -233,7 +290,7 @@ function renderSquad(){
   const locked = me.locked;
   const av = avatarFor(me.name);
   const chips = myPicks.map(id=>{ const p=playerById(id); if(!p) return '';
-    return `<div class="roster-chip"><span>${esc(p.name)}<span class="pos">${p.pos}</span>${statusTag(p)}</span>
+    return `<div class="roster-chip"><span class="prow">${headshot(p.id,'sm')}<span>${esc(p.name)}<span class="pos">${p.pos}</span>${statusTag(p)}</span></span>
       <span class="row"><span class="price">$${p.price}</span>${locked?'':`<button class="addbtn remove" onclick="togglePick(${p.id})">−</button>`}</span></div>`;
   }).join('') || '<p class="muted">No players yet — hit the market below. 🛒</p>';
 
@@ -262,6 +319,7 @@ function renderSquad(){
     ${locked ? '' : `<div class="card"><h2>🛒 Player Market</h2><p class="muted">Tap + to buy. IL players are discounted comeback bets — high risk, high reward.</p><div id="market"></div></div>`}
   `;
   if(!locked) renderMarket();
+  updateCapdock();
 }
 
 function renderMarket(){
@@ -271,7 +329,7 @@ function renderMarket(){
     const rows = players.filter(p=>p.price>=lo && p.price<=hi).sort((a,b)=>b.price-a.price).map(p=>{
       const owned = myPicks.includes(p.id);
       const cantAfford = !owned && (picksTotal(myPicks)+p.price > BUDGET || myPicks.length>=ROSTER_SIZE);
-      return `<tr><td>${esc(p.name)}<span class="pos">${p.pos}</span>${statusTag(p)}</td>
+      return `<tr><td><span class="prow">${headshot(p.id,'sm')}<span>${esc(p.name)}<span class="pos">${p.pos}</span>${statusTag(p)}</span></span></td>
         <td class="price">$${p.price}</td>
         <td style="text-align:right"><button class="addbtn ${owned?'remove':''}" ${cantAfford?'disabled':''}
           onclick="togglePick(${p.id})">${owned?'−':'+'}</button></td></tr>`;
@@ -387,7 +445,7 @@ async function refreshStatuses(){
     const r = await fetch('https://statsapi.mlb.com/api/v1/teams/119/roster?rosterType=40Man&season=2026');
     const j = await r.json();
     if(!j.roster || !j.roster.length) return;
-    const map = { A:'Active', D10:'10-Day IL', D15:'15-Day IL', D60:'60-Day IL', D7:'7-Day IL', RM:'Minors' };
+    const map = { A:'Active', D10:'10-Day IL', D15:'15-Day IL', D60:'60-Day IL', D7:'7-Day IL', RM:'Minors', NYR:'Just traded' };
     const onRoster = new Set();
     j.roster.forEach(e=>{
       const id = e.person?.id; if(!id) return;
@@ -424,26 +482,25 @@ async function renderBoard(){
     const today = new Date().toISOString().slice(0,10);
     const preseason = today < START_DATE;
 
-    // player of the day among owned players
     let mvp = null;
     ownedIds.forEach(id=>{ const pp=pts[id]; if(pp && pp.today>0 && (!mvp || pp.today>mvp.today)) mvp={id, ...pp}; });
     const medals = ['🥇','🥈','🥉'];
 
     v.innerHTML = `
       ${preseason?'<div class="card"><p class="muted" style="margin:0">🕐 Scoring starts <b>July 30</b> — points appear after the first games.</p></div>':''}
-      ${mvp ? `<div class="mvp"><span class="star">🌟</span><span><b>Player of the Day</b><br>
-        <span class="muted">${esc(playerById(mvp.id)?.name||'')}</span></span><span class="pts">+${mvp.today}</span></div>` : ''}
+      ${mvp ? `<div class="mvp">${headshot(mvp.id)}<span class="who"><span>🌟 Player of the Day</span>
+        <b>${esc(playerById(mvp.id)?.name||'')}</b></span><span class="pts">+${mvp.today}</span></div>` : ''}
       ${rows.length? rows.map((r,i)=>{
         const av = avatarFor(r.m.name);
         const hot = r.dayTotal>=25 ? ' 🔥' : '';
         return `
-        <div class="lb-item ${i===0&&r.total>0?'leader':''}">
+        <div class="lb-item ${i===0&&r.total>0?'leader':''}" style="animation-delay:${i*70}ms">
           <div class="lb-head" onclick="this.parentNode.querySelector('.lb-detail').style.display = this.parentNode.querySelector('.lb-detail').style.display==='block'?'none':'block'">
             ${i<3 ? `<div class="medal">${medals[i]}</div>` : `<div class="ranknum">${i+1}</div>`}
             <div class="avatar" style="background:${av.bg}">${av.emo}</div>
             <div class="lb-name">${i===0&&r.total>0?'👑 ':''}${esc(r.m.name)}${hot}
               <span class="sub">${r.m.locked?'🔒 locked':'still drafting…'}</span></div>
-            <div style="text-align:right"><div class="lb-pts">${r.total}</div>
+            <div style="text-align:right"><div class="lb-pts" data-t="${r.total}">0</div>
               <div class="lb-today">${r.dayTotal ? fmtToday(r.dayTotal)+' today' : '<span class="muted">— today</span>'}</div></div>
           </div>
           <div class="lb-bar"><div style="width:${(r.total/max)*100}%"></div></div>
@@ -451,8 +508,8 @@ async function renderBoard(){
             ${r.picks.length ? `<table class="ptable"><thead><tr><th>Player</th><th style="text-align:right">Today</th><th style="text-align:right">Total</th></tr></thead><tbody>${ r.picks
               .map(p=>({p, pl:playerById(p.player_id), pp:pts[p.player_id]}))
               .sort((a,b)=>(b.pp?.pts||0)-(a.pp?.pts||0))
-              .map(({p,pl,pp})=>`<tr><td>${esc(pl?.name||p.player_id)}<span class="pos">${pl?.pos||''}</span>${pl?statusTag(pl):''}<br>
-                <span class="muted" style="font-size:11px">${pp?.detail||'no games yet'}</span></td>
+              .map(({p,pl,pp})=>`<tr><td><span class="prow">${headshot(p.player_id,'sm')}<span>${esc(pl?.name||p.player_id)}<span class="pos">${pl?.pos||''}</span>${pl?statusTag(pl):''}<br>
+                <span class="muted" style="font-size:11px">${pp?.detail||'no games yet'}</span></span></span></td>
                 <td style="text-align:right">${fmtToday(pp?.today)}</td>
                 <td class="price" style="text-align:right">${pp?.pts??0}</td></tr>`).join('') }</tbody></table>`
             : '<p class="muted">No players drafted yet.</p>'}
@@ -460,6 +517,7 @@ async function renderBoard(){
         </div>`;}).join('') : '<div class="card"><p class="muted">No managers yet — be the first through the turnstile! 🎟️</p></div>'}
       <p class="muted" style="text-align:center">Points from real games since Jul 30 • updates live from MLB<br>
       <button class="btn secondary small" style="margin-top:8px" onclick="statsCache=null;renderBoard()">↻ Refresh</button></p>`;
+    v.querySelectorAll('.lb-pts').forEach(countUp);
   }catch(e){ v.innerHTML = `<div class="card"><p class="muted">Couldn't load the leaderboard (${esc(e.message)}). Try again in a moment.</p></div>`; }
 }
 
@@ -474,8 +532,8 @@ async function renderPlayers(){
     <table class="ptable"><thead><tr><th>Player</th><th>Cost</th><th style="text-align:right">Today</th><th style="text-align:right">Total</th></tr></thead><tbody>
     ${sorted.map(p=>{
       const val = pts[p.id]?.pts ? (pts[p.id].pts/p.price).toFixed(1) : null;
-      return `<tr><td>${esc(p.name)}<span class="pos">${p.pos}</span>${statusTag(p)}
-        ${val ? `<br><span class="valuetag">${val} pts per $</span>` : ''}</td>
+      return `<tr><td><span class="prow">${headshot(p.id,'sm')}<span>${esc(p.name)}<span class="pos">${p.pos}</span>${statusTag(p)}
+        ${val ? `<br><span class="valuetag">${val} pts per $</span>` : ''}</span></span></td>
       <td class="price">$${p.price}</td><td style="text-align:right">${fmtToday(pts[p.id]?.today)}</td>
       <td style="text-align:right;font-weight:800">${pts[p.id]?.pts??0}</td></tr>`;}).join('')}
     </tbody></table></div>`;
