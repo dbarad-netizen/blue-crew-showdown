@@ -300,6 +300,23 @@ async function fetchPlayerPoints(ids){
   return results;
 }
 
+async function refreshStatuses(){
+  try{
+    const r = await fetch('https://statsapi.mlb.com/api/v1/teams/119/roster?rosterType=40Man&season=2026');
+    const j = await r.json();
+    if(!j.roster || !j.roster.length) return;
+    const map = { A:'Active', D10:'10-Day IL', D15:'15-Day IL', D60:'60-Day IL', D7:'7-Day IL', RM:'Minors' };
+    const onRoster = new Set();
+    j.roster.forEach(e=>{
+      const id = e.person?.id; if(!id) return;
+      onRoster.add(id);
+      const p = playerById(id);
+      if(p) p.status = map[e.status?.code] || e.status?.description || 'Active';
+    });
+    players.forEach(p=>{ if(!onRoster.has(p.id)) p.status = 'Off roster'; });
+  }catch(e){ /* keep database statuses as fallback */ }
+}
+
 function fmtToday(t){
   if(!t) return '<span class="muted">—</span>';
   const col = t>0 ? 'var(--green)' : 'var(--red)';
@@ -389,6 +406,7 @@ function renderRules(){
   renderRules();
   try{
     players = await sb('/dodgers_players?order=price.desc');
+    await refreshStatuses();   // live IL/active status from MLB, overrides the stored snapshot
   }catch(e){
     $('view-squad').innerHTML = `<div class="card"><p class="muted">Couldn't reach the league database. Check your connection and refresh.</p></div>`;
     return;
