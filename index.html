@@ -4,65 +4,121 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Blue Crew Showdown — Dodgers Rest-of-Season League</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
   :root{
-    --blue:#005A9C; --blue-dark:#00437a; --blue-light:#e8f1f8;
-    --red:#EF3E42; --ink:#14232f; --muted:#5b7284; --line:#d9e4ec;
-    --bg:#f4f8fb; --card:#ffffff; --gold:#c69214; --green:#1a7f4e;
+    --blue:#005A9C; --blue-dark:#04294a; --blue-mid:#0e69b0; --blue-light:#e8f1f8;
+    --red:#EF3E42; --ink:#132330; --muted:#5b7284; --line:#d9e4ec;
+    --bg:#eef4fa; --card:#ffffff; --gold:#e3a812; --gold-deep:#c69214; --green:#1a7f4e;
+    --disp:'Bebas Neue', 'Arial Narrow', sans-serif;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-  body{margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink);}
-  header{background:linear-gradient(135deg,var(--blue-dark),var(--blue)); color:#fff; padding:18px 16px 12px; text-align:center;}
-  header h1{margin:0; font-size:22px; letter-spacing:.3px;}
-  header p{margin:4px 0 0; font-size:12.5px; opacity:.85;}
-  nav{display:flex; background:var(--blue-dark); position:sticky; top:0; z-index:10;}
-  nav button{flex:1; background:none; border:none; color:#bcd6ea; padding:12px 4px; font-size:13px; font-weight:600; cursor:pointer; border-bottom:3px solid transparent;}
+  body{margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    background-image:radial-gradient(circle at 20% -10%, #ffffff 0%, transparent 45%), radial-gradient(#d9e6f2 1px, transparent 1.2px);
+    background-size:auto, 22px 22px;
+    color:var(--ink);}
+  header{background:linear-gradient(160deg,#021c33 0%, var(--blue-dark) 30%, var(--blue) 75%, var(--blue-mid) 100%);
+    color:#fff; padding:22px 16px 16px; text-align:center; position:relative; overflow:hidden;}
+  header::before{content:'⚾'; position:absolute; font-size:130px; opacity:.08; right:-24px; top:-30px; transform:rotate(18deg);}
+  header::after{content:'⚾'; position:absolute; font-size:90px; opacity:.07; left:-18px; bottom:-30px; transform:rotate(-15deg);}
+  header h1{margin:0; font-family:var(--disp); font-size:40px; letter-spacing:2.5px; font-weight:400;
+    text-shadow:0 3px 0 rgba(0,0,0,.25); font-style:italic;}
+  header h1 .accent{color:#ffd766;}
+  .chiprow{display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin-top:8px; position:relative; z-index:1;}
+  .chip{background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.25); backdrop-filter:blur(2px);
+    border-radius:999px; padding:4px 12px; font-size:12px; font-weight:700; letter-spacing:.3px;}
+  nav{display:flex; background:var(--blue-dark); position:sticky; top:0; z-index:10; box-shadow:0 2px 10px rgba(2,28,51,.35);}
+  nav button{flex:1; background:none; border:none; color:#9dc0dc; padding:13px 2px 11px; font-family:var(--disp);
+    font-size:clamp(13px,4vw,17px); letter-spacing:1px; white-space:nowrap; cursor:pointer; border-bottom:3px solid transparent; transition:color .15s;}
   nav button.active{color:#fff; border-bottom-color:var(--gold);}
-  main{max-width:640px; margin:0 auto; padding:14px 12px 60px;}
-  .card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:12px;}
-  .card h2{margin:0 0 8px; font-size:16px; color:var(--blue-dark);}
+  main{max-width:640px; margin:0 auto; padding:14px 12px 70px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:12px;
+    box-shadow:0 2px 10px rgba(0,42,92,.07);}
+  .card h2{margin:0 0 8px; font-family:var(--disp); font-size:22px; letter-spacing:1px; font-weight:400; color:var(--blue-dark);}
   .muted{color:var(--muted); font-size:13px;}
-  input[type=text]{width:100%; padding:11px 12px; border:1.5px solid var(--line); border-radius:9px; font-size:16px;}
-  .btn{display:inline-block; background:var(--blue); color:#fff; border:none; border-radius:9px; padding:11px 18px; font-size:15px; font-weight:700; cursor:pointer;}
-  .btn:disabled{background:#9db8cc; cursor:not-allowed;}
-  .btn.secondary{background:#eef4f9; color:var(--blue-dark); border:1.5px solid var(--line);}
-  .btn.danger{background:var(--red);}
-  .btn.small{padding:7px 12px; font-size:13px;}
+  input[type=text]{width:100%; padding:12px 14px; border:2px solid var(--line); border-radius:12px; font-size:16px; outline-color:var(--blue);}
+  .btn{display:inline-block; background:linear-gradient(180deg,var(--blue-mid),var(--blue)); color:#fff; border:none;
+    border-radius:12px; padding:12px 20px; font-size:15px; font-weight:800; cursor:pointer; letter-spacing:.3px;
+    box-shadow:0 3px 0 var(--blue-dark); transition:transform .08s;}
+  .btn:active{transform:translateY(2px); box-shadow:0 1px 0 var(--blue-dark);}
+  .btn:disabled{background:#a9bfd2; box-shadow:0 3px 0 #8ba6bd; cursor:not-allowed;}
+  .btn.secondary{background:#fff; color:var(--blue-dark); border:2px solid var(--line); box-shadow:0 3px 0 var(--line);}
+  .btn.small{padding:8px 14px; font-size:13px;}
   .row{display:flex; gap:8px; align-items:center;}
-  .budgetbar{height:12px; background:#e3ecf3; border-radius:6px; overflow:hidden; margin:6px 0;}
-  .budgetbar>div{height:100%; background:linear-gradient(90deg,var(--blue),var(--red)); transition:width .25s;}
+  .budgetwrap{margin:10px 0 4px;}
+  .budgetbar{height:16px; background:#e0eaf3; border-radius:8px; overflow:hidden; position:relative;}
+  .budgetbar>div{height:100%; border-radius:8px;
+    background:repeating-linear-gradient(45deg, var(--blue) 0 12px, var(--blue-mid) 12px 24px);
+    transition:width .4s cubic-bezier(.2,.8,.3,1);}
+  .budgetbar>div.hot{background:repeating-linear-gradient(45deg, var(--red) 0 12px, #ff6a6d 12px 24px);}
+  .capline{display:flex; justify-content:space-between; font-size:13px; margin-top:6px;}
+  .bignum{font-family:var(--disp); font-size:20px; letter-spacing:.5px;}
   .ptable{width:100%; border-collapse:collapse; font-size:13.5px;}
-  .ptable th{text-align:left; color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.5px; padding:6px 4px; border-bottom:1px solid var(--line);}
-  .ptable td{padding:8px 4px; border-bottom:1px solid #edf3f8; vertical-align:middle;}
-  .price{font-weight:800; color:var(--blue-dark); white-space:nowrap;}
-  .pos{display:inline-block; background:var(--blue-light); color:var(--blue-dark); font-size:10.5px; font-weight:700; border-radius:5px; padding:2px 6px; margin-left:6px;}
-  .il{display:inline-block; background:#fdeaea; color:#b3282c; font-size:10px; font-weight:700; border-radius:5px; padding:2px 6px; margin-left:4px;}
-  .addbtn{background:var(--blue); color:#fff; border:none; border-radius:8px; width:34px; height:30px; font-size:17px; font-weight:800; cursor:pointer;}
-  .addbtn.remove{background:var(--red);}
-  .addbtn:disabled{background:#c3d4e2;}
-  .lb-item{border:1px solid var(--line); border-radius:12px; margin-bottom:10px; overflow:hidden; background:#fff;}
+  .ptable th{text-align:left; color:var(--muted); font-size:10.5px; text-transform:uppercase; letter-spacing:.8px;
+    padding:6px 4px; border-bottom:2px solid var(--line);}
+  .ptable td{padding:9px 4px; border-bottom:1px solid #edf3f8; vertical-align:middle;}
+  .price{font-family:var(--disp); font-size:18px; letter-spacing:.5px; color:var(--blue); white-space:nowrap;}
+  .pos{display:inline-block; background:var(--blue-light); color:var(--blue-dark); font-size:10px; font-weight:800;
+    border-radius:6px; padding:2px 6px; margin-left:6px; vertical-align:1px;}
+  .il{display:inline-block; background:#fdeaea; color:#b3282c; font-size:9.5px; font-weight:800; border-radius:6px;
+    padding:2px 6px; margin-left:4px; vertical-align:1px;}
+  .il.minors{background:#f0ecfc; color:#5b3ea8;}
+  .addbtn{background:linear-gradient(180deg,var(--blue-mid),var(--blue)); color:#fff; border:none; border-radius:50%;
+    width:36px; height:36px; font-size:19px; font-weight:800; cursor:pointer; box-shadow:0 2px 0 var(--blue-dark); line-height:1;}
+  .addbtn.remove{background:linear-gradient(180deg,#ff5d61,var(--red)); box-shadow:0 2px 0 #b3282c;}
+  .addbtn:disabled{background:#c3d4e2; box-shadow:0 2px 0 #a9bfd2;}
+  .lb-item{border:1px solid var(--line); border-radius:16px; margin-bottom:12px; overflow:hidden; background:#fff;
+    box-shadow:0 2px 10px rgba(0,42,92,.07);}
+  .lb-item.leader{border:2px solid var(--gold); box-shadow:0 3px 14px rgba(227,168,18,.3);}
   .lb-head{display:flex; align-items:center; gap:10px; padding:12px; cursor:pointer;}
-  .rank{width:30px; height:30px; border-radius:50%; background:var(--blue-light); color:var(--blue-dark); font-weight:800; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0;}
-  .rank.r1{background:var(--gold); color:#fff;} .rank.r2{background:#9fb3c8; color:#fff;} .rank.r3{background:#b0793a; color:#fff;}
-  .lb-name{font-weight:700; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis;}
-  .lb-pts{font-weight:800; color:var(--blue-dark); font-size:16px;}
-  .lb-bar{height:6px; background:#eef3f8;} .lb-bar>div{height:100%; background:var(--blue);}
-  .lb-detail{padding:4px 12px 12px; display:none; background:#fbfdfe;}
-  .toast{position:fixed; bottom:16px; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; padding:10px 18px; border-radius:10px; font-size:14px; z-index:99; max-width:90%; text-align:center;}
-  .pill{display:inline-block; border-radius:999px; padding:3px 10px; font-size:12px; font-weight:700;}
+  .avatar{width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:20px; flex-shrink:0; border:2px solid #fff; box-shadow:0 0 0 2px var(--line);}
+  .medal{font-size:24px; width:28px; text-align:center; flex-shrink:0;}
+  .ranknum{font-family:var(--disp); font-size:18px; color:var(--muted); width:28px; text-align:center; flex-shrink:0;}
+  .lb-name{font-weight:800; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; font-size:15px;}
+  .lb-name .sub{display:block; font-size:11px; font-weight:600; color:var(--muted);}
+  .lb-pts{font-family:var(--disp); font-size:26px; letter-spacing:.5px; color:var(--blue-dark); line-height:1;}
+  .lb-today{font-size:11.5px; font-weight:700; text-align:right;}
+  .lb-bar{height:6px; background:#eef3f8; margin:0 12px 0;}
+  .lb-bar>div{height:100%; border-radius:0 4px 4px 0; background:linear-gradient(90deg,var(--blue-dark),var(--blue-mid)); transition:width .6s cubic-bezier(.2,.8,.3,1);}
+  .lb-item.leader .lb-bar>div{background:linear-gradient(90deg,var(--gold-deep),var(--gold));}
+  .lb-detail{padding:8px 12px 12px; display:none; background:#fbfdfe; margin-top:8px; border-top:1px dashed var(--line);}
+  .mvp{background:linear-gradient(135deg,#fff8e3,#ffefc2); border:1.5px solid #f3d47e; border-radius:16px;
+    padding:12px 14px; margin-bottom:12px; display:flex; align-items:center; gap:12px; box-shadow:0 2px 10px rgba(227,168,18,.18);}
+  .mvp .star{font-size:30px;}
+  .mvp b{font-size:15px;}
+  .mvp .pts{margin-left:auto; font-family:var(--disp); font-size:26px; color:var(--gold-deep);}
+  .toast{position:fixed; bottom:18px; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff;
+    padding:11px 20px; border-radius:12px; font-size:14px; font-weight:600; z-index:99; max-width:90%; text-align:center;
+    box-shadow:0 4px 16px rgba(0,0,0,.3);}
+  .pill{display:inline-block; border-radius:999px; padding:3px 10px; font-size:11.5px; font-weight:800;}
   .pill.ok{background:#e3f4ea; color:var(--green);} .pill.warn{background:#fdeaea; color:#b3282c;}
-  .roster-chip{display:flex; justify-content:space-between; align-items:center; padding:7px 10px; background:var(--blue-light); border-radius:8px; margin-bottom:6px; font-size:14px;}
-  .spin{text-align:center; padding:24px; color:var(--muted);}
-  h3.tier{font-size:12px; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin:14px 0 4px;}
-  .rules p{font-size:14px; line-height:1.55; margin:8px 0;}
+  .roster-chip{display:flex; justify-content:space-between; align-items:center; padding:9px 12px;
+    background:linear-gradient(90deg,var(--blue-light),#f2f8fd); border:1px solid #d4e5f2; border-radius:12px; margin-bottom:7px; font-size:14px; font-weight:600;}
+  .spin{text-align:center; padding:28px; color:var(--muted); font-weight:600;}
+  h3.tier{font-family:var(--disp); font-size:16px; letter-spacing:1.5px; color:var(--blue-dark); margin:18px 0 4px; font-weight:400;
+    border-bottom:2px solid var(--line); padding-bottom:4px;}
+  .rules p{font-size:14px; line-height:1.6; margin:8px 0;}
   .rules table{width:100%; font-size:13px; border-collapse:collapse;}
-  .rules td{padding:5px 6px; border-bottom:1px solid #edf3f8;}
+  .rules td{padding:6px; border-bottom:1px solid #edf3f8;}
+  .fire{font-size:12px;}
+  .valuetag{font-size:10.5px; color:var(--muted); font-weight:600;}
+  footer{text-align:center; color:var(--muted); font-size:12px; padding:10px 0 26px;}
+  .confetti{position:fixed; top:-20px; z-index:200; border-radius:2px; pointer-events:none; animation:fall linear forwards;}
+  @keyframes fall{ to{ transform:translateY(110vh) rotate(720deg); opacity:.9; } }
 </style>
 </head>
 <body>
 <header>
-  <h1>⚾ Blue Crew Showdown</h1>
-  <p>Dodgers rest-of-season fantasy • scoring starts Jul 30, 2026</p>
+  <h1>⚾ BLUE CREW <span class="accent">SHOWDOWN</span></h1>
+  <div class="chiprow">
+    <span class="chip">💰 $100 cap</span>
+    <span class="chip">🧢 6 roster spots</span>
+    <span class="chip" id="chip-days">⏳ season countdown</span>
+  </div>
 </header>
 <nav>
   <button id="tab-squad" class="active" onclick="showTab('squad')">My Squad</button>
@@ -75,19 +131,25 @@
   <section id="view-board" style="display:none"></section>
   <section id="view-players" style="display:none"></section>
   <section id="view-rules" style="display:none"></section>
+  <footer>Built for the Blue Crew 💙 • real stats via MLB</footer>
 </main>
 
 <script>
 const SB_URL = "https://xazmwpozsmbrqoulizyn.supabase.co/rest/v1";
 const SB_KEY = "sb_publishable_nxpCXX6gQ8ZOWjFGdgFi3A_hcfOxoSY";
 const BUDGET = 100, ROSTER_SIZE = 6, MIN_P = 2, MIN_H = 2;
-const START_DATE = "2026-07-30";           // scoring starts
+const START_DATE = "2026-07-30";
 const SEASON_END = "2026-09-30";
 let players = [], me = null, myPicks = [], allManagers = [], allPicks = [];
 let statsCache = null, statsCacheTime = 0;
 
 const $ = id => document.getElementById(id);
 function esc(s){ const d=document.createElement('div'); d.textContent=s??''; return d.innerHTML; }
+
+const AVATARS = ['🧢','⚾','🔥','🐐','🚀','🎯','🦾','🌴','🏆','🎲','🦖','⭐'];
+const AVA_BG  = ['#dbeafe','#fde8e8','#fef3c7','#dcfce7','#ede9fe','#ffe4e6','#e0f2fe','#f1f5dc','#fce7f3','#e2e8f0','#d1fae5','#fef9c3'];
+function hashName(n){ let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))>>>0; return h; }
+function avatarFor(n){ const h=hashName(n||'?'); return {emo:AVATARS[h%AVATARS.length], bg:AVA_BG[(h>>4)%AVA_BG.length]}; }
 
 async function sb(path, opts={}){
   const r = await fetch(SB_URL + path, {
@@ -104,6 +166,18 @@ function toast(msg, ms=2600){
   document.querySelectorAll('.toast').forEach(t=>t.remove());
   const t = document.createElement('div'); t.className='toast'; t.textContent=msg;
   document.body.appendChild(t); setTimeout(()=>t.remove(), ms);
+}
+
+function confetti(){
+  const colors=['#005A9C','#EF3E42','#e3a812','#ffffff','#0e69b0'];
+  for(let i=0;i<70;i++){
+    const c=document.createElement('div'); c.className='confetti';
+    const size=6+Math.random()*7;
+    c.style.cssText+=`left:${Math.random()*100}vw; width:${size}px; height:${size*0.5}px;
+      background:${colors[i%colors.length]}; animation-duration:${1.6+Math.random()*1.6}s;
+      animation-delay:${Math.random()*0.4}s; transform:rotate(${Math.random()*360}deg);`;
+    document.body.appendChild(c); setTimeout(()=>c.remove(), 3600);
+  }
 }
 
 function showTab(name){
@@ -133,13 +207,18 @@ function validateSquad(picks){
   if(countRole(picks,'hitter') < MIN_H) errs.push(`Need at least ${MIN_H} hitters`);
   return errs;
 }
+function statusTag(p){
+  if(p.status==='Active') return '';
+  const cls = (p.status==='Minors'||p.status==='Off roster') ? 'il minors' : 'il';
+  return `<span class="${cls}">${p.status}</span>`;
+}
 
 function renderSquad(){
   const v = $('view-squad');
   if(!me){
     v.innerHTML = `
       <div class="card">
-        <h2>Join the league</h2>
+        <h2>🎟️ Join the League</h2>
         <p class="muted">Enter your name to start drafting. You get <b>$${BUDGET}</b> to buy <b>${ROSTER_SIZE} Dodgers</b>. Stars cost more — bargains win leagues.</p>
         <div class="row" style="margin-top:10px">
           <input type="text" id="join-name" placeholder="Your name" maxlength="24">
@@ -152,44 +231,47 @@ function renderSquad(){
   const total = picksTotal(myPicks), left = BUDGET-total;
   const errs = validateSquad(myPicks);
   const locked = me.locked;
+  const av = avatarFor(me.name);
   const chips = myPicks.map(id=>{ const p=playerById(id); if(!p) return '';
-    return `<div class="roster-chip"><span>${esc(p.name)}<span class="pos">${p.pos}</span></span>
+    return `<div class="roster-chip"><span>${esc(p.name)}<span class="pos">${p.pos}</span>${statusTag(p)}</span>
       <span class="row"><span class="price">$${p.price}</span>${locked?'':`<button class="addbtn remove" onclick="togglePick(${p.id})">−</button>`}</span></div>`;
-  }).join('') || '<p class="muted">No players yet — grab some below.</p>';
+  }).join('') || '<p class="muted">No players yet — hit the market below. 🛒</p>';
 
   v.innerHTML = `
     <div class="card">
       <div class="row" style="justify-content:space-between">
-        <h2 style="margin:0">${esc(me.name)}'s Squad</h2>
+        <div class="row"><div class="avatar" style="background:${av.bg}">${av.emo}</div>
+          <h2 style="margin:0">${esc(me.name)}'s Squad</h2></div>
         ${locked ? '<span class="pill ok">🔒 Locked in</span>' : '<span class="pill warn">Drafting</span>'}
       </div>
-      <div class="budgetbar"><div style="width:${Math.min(100,total)}%"></div></div>
-      <div class="row" style="justify-content:space-between; font-size:13px">
-        <span>Spent: <b>$${total}</b></span><span>Remaining: <b style="color:${left<0?'var(--red)':'var(--green)'}">$${left}</b></span>
+      <div class="budgetwrap">
+        <div class="budgetbar"><div class="${total>85?'hot':''}" style="width:${Math.min(100,total)}%"></div></div>
+        <div class="capline"><span>Spent <span class="bignum">$${total}</span></span>
+          <span>Left <span class="bignum" style="color:${left<0?'var(--red)':'var(--green)'}">$${left}</span></span></div>
       </div>
       <div style="margin-top:10px">${chips}</div>
-      ${locked ? '<p class="muted" style="margin-top:8px">Your squad is final. Scoreboard updates automatically from real games.</p>' : `
+      ${locked ? '<p class="muted" style="margin-top:8px">Your squad is final. The scoreboard runs itself from real games. 🍿</p>' : `
         <div style="margin-top:10px">
-          ${errs.length ? `<p class="muted">⚠️ ${errs.join(' • ')}</p>` : '<p class="muted">✅ Valid squad — lock it in when you\'re ready!</p>'}
+          ${errs.length ? `<p class="muted">⚠️ ${errs.join(' • ')}</p>` : '<p class="muted">✅ Valid squad — lock it in when you&#39;re ready!</p>'}
           <div class="row" style="margin-top:6px">
             <button class="btn" ${errs.length?'disabled':''} onclick="lockSquad()">🔒 Lock in squad</button>
             <button class="btn secondary small" onclick="saveDraft(true)">Save draft</button>
           </div>
         </div>`}
     </div>
-    ${locked ? '' : `<div class="card"><h2>Player market</h2><p class="muted">Tap + to buy. IL = on injured list (discounted comeback bets).</p><div id="market"></div></div>`}
+    ${locked ? '' : `<div class="card"><h2>🛒 Player Market</h2><p class="muted">Tap + to buy. IL players are discounted comeback bets — high risk, high reward.</p><div id="market"></div></div>`}
   `;
   if(!locked) renderMarket();
 }
 
 function renderMarket(){
   const el = $('market'); if(!el) return;
-  const tiers = [[25,999,'💎 Superstars'],[12,24,'⭐ Stars'],[6,11,'🔧 Solid pieces'],[0,5,'💰 Bargain bin']];
+  const tiers = [[25,999,'💎 SUPERSTARS'],[12,24,'⭐ STARS'],[6,11,'🔧 SOLID PIECES'],[0,5,'💰 BARGAIN BIN']];
   el.innerHTML = tiers.map(([lo,hi,label])=>{
     const rows = players.filter(p=>p.price>=lo && p.price<=hi).sort((a,b)=>b.price-a.price).map(p=>{
       const owned = myPicks.includes(p.id);
       const cantAfford = !owned && (picksTotal(myPicks)+p.price > BUDGET || myPicks.length>=ROSTER_SIZE);
-      return `<tr><td>${esc(p.name)}<span class="pos">${p.pos}</span>${p.status!=='Active'?`<span class="il">${p.status}</span>`:''}</td>
+      return `<tr><td>${esc(p.name)}<span class="pos">${p.pos}</span>${statusTag(p)}</td>
         <td class="price">$${p.price}</td>
         <td style="text-align:right"><button class="addbtn ${owned?'remove':''}" ${cantAfford?'disabled':''}
           onclick="togglePick(${p.id})">${owned?'−':'+'}</button></td></tr>`;
@@ -203,7 +285,7 @@ async function joinLeague(){
   if(!name){ toast('Enter your name first'); return; }
   try{
     const rows = await sb('/dodgers_managers', { method:'POST', body: JSON.stringify({name}) });
-    saveMe(rows[0]); myPicks=[]; renderSquad(); toast('Welcome to the league, '+name+'!');
+    saveMe(rows[0]); myPicks=[]; renderSquad(); toast('Welcome to the league, '+name+'! ⚾');
   }catch(e){
     if(String(e).includes('23505') || String(e).includes('duplicate')){
       const existing = await sb('/dodgers_managers?name=eq.'+encodeURIComponent(name));
@@ -216,7 +298,7 @@ async function resumeAs(m){
   saveMe(m);
   const picks = await sb('/dodgers_picks?manager_id=eq.'+m.id);
   myPicks = picks.map(p=>p.player_id);
-  renderSquad(); toast('Welcome back, '+m.name+'!');
+  renderSquad(); toast('Welcome back, '+m.name+'! 🧢');
 }
 
 function togglePick(id){
@@ -225,7 +307,7 @@ function togglePick(id){
   else{
     if(myPicks.length>=ROSTER_SIZE){ toast('Roster full — remove someone first'); return; }
     const p = playerById(id);
-    if(picksTotal(myPicks)+p.price > BUDGET){ toast("Can't afford "+p.name); return; }
+    if(picksTotal(myPicks)+p.price > BUDGET){ toast("Can't afford "+p.name+" 💸"); return; }
     myPicks.push(id);
   }
   renderSquad();
@@ -238,7 +320,7 @@ async function saveDraft(showMsg){
     await sb('/dodgers_picks', { method:'POST',
       body: JSON.stringify(myPicks.map(id=>({manager_id:me.id, player_id:id, price:playerById(id).price}))) });
   }
-  if(showMsg) toast('Draft saved — you can keep tweaking');
+  if(showMsg) toast('Draft saved — keep tweaking 📝');
 }
 
 async function lockSquad(){
@@ -247,7 +329,7 @@ async function lockSquad(){
   if(!confirm('Lock in your squad? No changes after this!')) return;
   await saveDraft(false);
   const rows = await sb('/dodgers_managers?id=eq.'+me.id, { method:'PATCH', body: JSON.stringify({locked:true}) });
-  saveMe(rows[0]); renderSquad(); toast('🎉 Squad locked! Good luck!');
+  saveMe(rows[0]); renderSquad(); confetti(); toast('🎉 Squad locked! Good luck!');
 }
 
 /* ---------- scoring ---------- */
@@ -320,7 +402,8 @@ async function refreshStatuses(){
 function fmtToday(t){
   if(!t) return '<span class="muted">—</span>';
   const col = t>0 ? 'var(--green)' : 'var(--red)';
-  return `<span style="color:${col};font-weight:700">${t>0?'+':''}${t}</span>`;
+  const fire = t>=15 ? ' <span class="fire">🔥</span>' : '';
+  return `<span style="color:${col};font-weight:800">${t>0?'+':''}${t}</span>${fire}`;
 }
 
 /* ---------- leaderboard ---------- */
@@ -340,44 +423,61 @@ async function renderBoard(){
     const max = Math.max(1, ...rows.map(r=>r.total));
     const today = new Date().toISOString().slice(0,10);
     const preseason = today < START_DATE;
+
+    // player of the day among owned players
+    let mvp = null;
+    ownedIds.forEach(id=>{ const pp=pts[id]; if(pp && pp.today>0 && (!mvp || pp.today>mvp.today)) mvp={id, ...pp}; });
+    const medals = ['🥇','🥈','🥉'];
+
     v.innerHTML = `
       ${preseason?'<div class="card"><p class="muted" style="margin:0">🕐 Scoring starts <b>July 30</b> — points appear after the first games.</p></div>':''}
-      ${rows.length? rows.map((r,i)=>`
-        <div class="lb-item">
+      ${mvp ? `<div class="mvp"><span class="star">🌟</span><span><b>Player of the Day</b><br>
+        <span class="muted">${esc(playerById(mvp.id)?.name||'')}</span></span><span class="pts">+${mvp.today}</span></div>` : ''}
+      ${rows.length? rows.map((r,i)=>{
+        const av = avatarFor(r.m.name);
+        const hot = r.dayTotal>=25 ? ' 🔥' : '';
+        return `
+        <div class="lb-item ${i===0&&r.total>0?'leader':''}">
           <div class="lb-head" onclick="this.parentNode.querySelector('.lb-detail').style.display = this.parentNode.querySelector('.lb-detail').style.display==='block'?'none':'block'">
-            <div class="rank r${i+1}">${i+1}</div>
-            <div class="lb-name">${esc(r.m.name)} ${r.m.locked?'🔒':'<span class="muted" style="font-weight:400">(drafting)</span>'}</div>
-            <div style="text-align:right"><div class="lb-pts">${r.total} pts</div>
-              <div style="font-size:11.5px">${r.dayTotal ? fmtToday(r.dayTotal)+' today' : '<span class="muted">— today</span>'}</div></div>
+            ${i<3 ? `<div class="medal">${medals[i]}</div>` : `<div class="ranknum">${i+1}</div>`}
+            <div class="avatar" style="background:${av.bg}">${av.emo}</div>
+            <div class="lb-name">${i===0&&r.total>0?'👑 ':''}${esc(r.m.name)}${hot}
+              <span class="sub">${r.m.locked?'🔒 locked':'still drafting…'}</span></div>
+            <div style="text-align:right"><div class="lb-pts">${r.total}</div>
+              <div class="lb-today">${r.dayTotal ? fmtToday(r.dayTotal)+' today' : '<span class="muted">— today</span>'}</div></div>
           </div>
           <div class="lb-bar"><div style="width:${(r.total/max)*100}%"></div></div>
           <div class="lb-detail">
             ${r.picks.length ? `<table class="ptable"><thead><tr><th>Player</th><th style="text-align:right">Today</th><th style="text-align:right">Total</th></tr></thead><tbody>${ r.picks
               .map(p=>({p, pl:playerById(p.player_id), pp:pts[p.player_id]}))
               .sort((a,b)=>(b.pp?.pts||0)-(a.pp?.pts||0))
-              .map(({p,pl,pp})=>`<tr><td>${esc(pl?.name||p.player_id)}<span class="pos">${pl?.pos||''}</span><br>
+              .map(({p,pl,pp})=>`<tr><td>${esc(pl?.name||p.player_id)}<span class="pos">${pl?.pos||''}</span>${pl?statusTag(pl):''}<br>
                 <span class="muted" style="font-size:11px">${pp?.detail||'no games yet'}</span></td>
                 <td style="text-align:right">${fmtToday(pp?.today)}</td>
                 <td class="price" style="text-align:right">${pp?.pts??0}</td></tr>`).join('') }</tbody></table>`
             : '<p class="muted">No players drafted yet.</p>'}
           </div>
-        </div>`).join('') : '<div class="card"><p class="muted">No managers yet — be the first to join!</p></div>'}
-      <p class="muted" style="text-align:center">Points from real games since Jul 30 • updates live from MLB stats<br>
+        </div>`;}).join('') : '<div class="card"><p class="muted">No managers yet — be the first through the turnstile! 🎟️</p></div>'}
+      <p class="muted" style="text-align:center">Points from real games since Jul 30 • updates live from MLB<br>
       <button class="btn secondary small" style="margin-top:8px" onclick="statsCache=null;renderBoard()">↻ Refresh</button></p>`;
-  }catch(e){ v.innerHTML = `<div class="card"><p class="muted">Couldn't load the leaderboard (${esc(e.message)}). Pull to refresh or try again.</p></div>`; }
+  }catch(e){ v.innerHTML = `<div class="card"><p class="muted">Couldn't load the leaderboard (${esc(e.message)}). Try again in a moment.</p></div>`; }
 }
 
 /* ---------- players tab ---------- */
 async function renderPlayers(){
   const v = $('view-players');
-  v.innerHTML = '<div class="spin">Loading player board…</div>';
+  v.innerHTML = '<div class="spin">Loading player board… 🧮</div>';
   const pts = await fetchPlayerPoints(players.map(p=>p.id));
   const sorted = [...players].sort((a,b)=>(pts[b.id]?.pts||0)-(pts[a.id]?.pts||0) || b.price-a.price);
-  v.innerHTML = `<div class="card"><h2>Player board</h2>
-    <p class="muted">Rest-of-season fantasy points vs. what they cost. Find the steals.</p>
+  v.innerHTML = `<div class="card"><h2>📊 Player Board</h2>
+    <p class="muted">Rest-of-season points vs. what they cost. Find the steals.</p>
     <table class="ptable"><thead><tr><th>Player</th><th>Cost</th><th style="text-align:right">Today</th><th style="text-align:right">Total</th></tr></thead><tbody>
-    ${sorted.map(p=>`<tr><td>${esc(p.name)}<span class="pos">${p.pos}</span>${p.status!=='Active'?`<span class="il">${p.status}</span>`:''}</td>
-      <td class="price">$${p.price}</td><td style="text-align:right">${fmtToday(pts[p.id]?.today)}</td><td style="text-align:right;font-weight:700">${pts[p.id]?.pts??0}</td></tr>`).join('')}
+    ${sorted.map(p=>{
+      const val = pts[p.id]?.pts ? (pts[p.id].pts/p.price).toFixed(1) : null;
+      return `<tr><td>${esc(p.name)}<span class="pos">${p.pos}</span>${statusTag(p)}
+        ${val ? `<br><span class="valuetag">${val} pts per $</span>` : ''}</td>
+      <td class="price">$${p.price}</td><td style="text-align:right">${fmtToday(pts[p.id]?.today)}</td>
+      <td style="text-align:right;font-weight:800">${pts[p.id]?.pts??0}</td></tr>`;}).join('')}
     </tbody></table></div>`;
 }
 
@@ -385,28 +485,31 @@ async function renderPlayers(){
 function renderRules(){
   $('view-rules').innerHTML = `
   <div class="card rules">
-    <h2>How it works</h2>
+    <h2>📖 How It Works</h2>
     <p>Everyone gets <b>$100</b> to buy a squad of <b>6 Dodgers</b> — at least 2 pitchers and 2 hitters (Ohtani counts as both). Better players cost more, so building a winner means finding value. Multiple managers can own the same player.</p>
     <p>Once you <b>lock in</b>, your squad is final. Points come from real MLB games from <b>July 30 through the end of the regular season</b>. Highest total wins. 🏆</p>
-    <h2 style="margin-top:16px">Hitter scoring</h2>
+    <h2 style="margin-top:16px">🏏 Hitter Scoring</h2>
     <table><tr><td>Single</td><td><b>+3</b></td><td>Double</td><td><b>+5</b></td></tr>
     <tr><td>Triple</td><td><b>+8</b></td><td>Home run</td><td><b>+10</b></td></tr>
     <tr><td>Run</td><td><b>+2</b></td><td>RBI</td><td><b>+2</b></td></tr>
     <tr><td>Walk / HBP</td><td><b>+2</b></td><td>Stolen base</td><td><b>+5</b></td></tr></table>
-    <h2 style="margin-top:16px">Pitcher scoring</h2>
+    <h2 style="margin-top:16px">🎯 Pitcher Scoring</h2>
     <table><tr><td>Out recorded</td><td><b>+0.75</b></td><td>Strikeout</td><td><b>+2</b></td></tr>
     <tr><td>Win</td><td><b>+4</b></td><td>Save</td><td><b>+8</b></td></tr>
     <tr><td>Hold</td><td><b>+4</b></td><td>Earned run</td><td><b>−2</b></td></tr></table>
-    <p class="muted" style="margin-top:12px">Prices were set from 2026 performance so far. IL players are discounted — high risk, high reward. Stats via MLB's public API.</p>
+    <p class="muted" style="margin-top:12px">Prices were set from 2026 performance at draft time. IL/roster tags update live from MLB every time the page loads. 🔥 = 15+ points today.</p>
   </div>`;
 }
 
 /* ---------- boot ---------- */
 (async function(){
   renderRules();
+  const end = new Date(SEASON_END+'T23:59:59');
+  const days = Math.max(0, Math.ceil((end - new Date())/86400000));
+  $('chip-days').textContent = days>0 ? `⏳ ${days} days left` : '🏁 season over';
   try{
     players = await sb('/dodgers_players?order=price.desc');
-    await refreshStatuses();   // live IL/active status from MLB, overrides the stored snapshot
+    await refreshStatuses();
   }catch(e){
     $('view-squad').innerHTML = `<div class="card"><p class="muted">Couldn't reach the league database. Check your connection and refresh.</p></div>`;
     return;
