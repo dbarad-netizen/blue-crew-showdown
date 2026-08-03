@@ -181,8 +181,13 @@ function headshot(id, cls){
 
 const AVATARS = ['🧢','⚾','🔥','🐐','🚀','🎯','🦾','🌴','🏆','🎲','🦖','⭐'];
 const AVA_BG  = ['#123a5e','#4a1d2e','#4a3a12','#12402b','#2f2354','#42122e','#0e3a52','#3a4212','#3f1c3a','#26364a','#0e4238','#4a3512'];
+const AVATAR_OVERRIDES = { 'blow me':'🍆', 'eat me':'🍆', 'lick me':'🍆' };
 function hashName(n){ let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))>>>0; return h; }
-function avatarFor(n){ const h=hashName(n||'?'); return {emo:AVATARS[h%AVATARS.length], bg:AVA_BG[(h>>4)%AVA_BG.length]}; }
+function avatarFor(n){
+  const key = (n||'').toLowerCase().replace(/[^a-z ]/g,'').replace(/\s+/g,' ').trim();
+  const h = hashName(n||'?');
+  return {emo: AVATAR_OVERRIDES[key] || AVATARS[h%AVATARS.length], bg:AVA_BG[(h>>4)%AVA_BG.length]};
+}
 
 async function sb(path, opts={}){
   const r = await fetch(SB_URL + path, {
