@@ -411,10 +411,19 @@ function fmtDate(d){ const [y,m,day]=d.split('-'); return `${m}/${day}/${y}`; }
 
 function rangePoints(j){
   let pts = 0, detail = [];
+  const seen = new Set();
   (j.stats||[]).forEach(g=>{
     const grp = g.group?.displayName;
-    (g.splits||[]).forEach(sp=>{
+    let splits = g.splits||[];
+    // MLB sometimes returns the same range twice: once tagged with a team, once as an aggregate.
+    // Prefer the aggregate (team-less) splits when present, then drop any exact duplicates.
+    const agg = splits.filter(sp=>!sp.team);
+    if(agg.length) splits = agg;
+    splits.forEach(sp=>{
       const s = sp.stat||{};
+      const key = grp + JSON.stringify(s);
+      if(seen.has(key)) return;
+      seen.add(key);
       if(grp==='hitting' && (s.atBats||s.plateAppearances)){ pts+=hitPts(s); detail.push(`${s.homeRuns||0} HR, ${s.rbi||0} RBI, ${s.runs||0} R`); }
       if(grp==='pitching' && s.inningsPitched){ pts+=pitchPts(s); detail.push(`${s.inningsPitched} IP, ${s.strikeOuts||0} K, ${s.wins||0} W, ${s.saves||0} SV`); }
     });
