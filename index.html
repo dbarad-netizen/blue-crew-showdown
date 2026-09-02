@@ -135,6 +135,7 @@
     display:flex; justify-content:space-around; align-items:center; box-shadow:0 -6px 20px rgba(0,0,0,.4);}
   .capdock .lab{font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; font-weight:700; display:block; text-align:center;}
   .capdock .val{font-family:var(--disp); font-size:22px; text-align:center; display:block;}
+  .lockbadge{font-size:44px; text-align:center; display:block; margin:6px 0 2px;}
   .confetti{position:fixed; top:-20px; z-index:200; border-radius:2px; pointer-events:none; animation:fall linear forwards;}
   @keyframes fall{ to{ transform:translateY(110vh) rotate(720deg); opacity:.9; } }
 </style>
@@ -144,7 +145,7 @@
   <h1>⚾ BLUE CREW <span class="accent">SHOWDOWN</span></h1>
   <div class="chiprow">
     <span class="chip">💰 $100 cap</span>
-    <span class="chip">🧢 6 roster spots</span>
+    <span class="chip">🔒 league locked</span>
     <span class="chip" id="chip-days">⏳ season countdown</span>
   </div>
 </header>
@@ -167,6 +168,7 @@
 const SB_URL = "https://xazmwpozsmbrqoulizyn.supabase.co/rest/v1";
 const SB_KEY = "sb_publishable_nxpCXX6gQ8ZOWjFGdgFi3A_hcfOxoSY";
 const BUDGET = 100, ROSTER_SIZE = 6, MIN_P = 2, MIN_H = 2;
+const LEAGUE_LOCKED = true;   // season under way — no new managers
 const START_DATE = "2026-07-30";
 const SEASON_END = "2026-09-30";
 let players = [], me = null, myPicks = [], allManagers = [], allPicks = [];
@@ -278,16 +280,30 @@ function updateCapdock(){
 function renderSquad(){
   const v = $('view-squad');
   if(!me){
-    v.innerHTML = `
-      <div class="card">
-        <h2>🎟️ Join the League</h2>
-        <p class="muted">Enter your name to start drafting. You get <b style="color:var(--ink)">$${BUDGET}</b> to buy <b style="color:var(--ink)">${ROSTER_SIZE} Dodgers</b>. Stars cost more — bargains win leagues.</p>
-        <div class="row" style="margin-top:10px">
-          <input type="text" id="join-name" placeholder="Your name" maxlength="24">
-          <button class="btn" onclick="joinLeague()">Join</button>
-        </div>
-        <div id="resume-area" style="margin-top:10px"></div>
-      </div>`;
+    if(LEAGUE_LOCKED){
+      v.innerHTML = `
+        <div class="card" style="text-align:center">
+          <span class="lockbadge">🔒</span>
+          <h2 style="text-align:center">League is locked</h2>
+          <p class="muted">The season is under way and rosters are final — no new managers can join. Check the <b style="color:var(--ink)">Leaderboard</b> to follow the race!</p>
+          <p class="muted" style="margin-top:14px">Already in the league on another phone? Enter your name to pick up your squad:</p>
+          <div class="row" style="margin-top:8px">
+            <input type="text" id="join-name" placeholder="Your manager name" maxlength="24">
+            <button class="btn secondary" onclick="resumeByName()">Resume</button>
+          </div>
+        </div>`;
+    } else {
+      v.innerHTML = `
+        <div class="card">
+          <h2>🎟️ Join the League</h2>
+          <p class="muted">Enter your name to start drafting. You get <b style="color:var(--ink)">$${BUDGET}</b> to buy <b style="color:var(--ink)">${ROSTER_SIZE} Dodgers</b>. Stars cost more — bargains win leagues.</p>
+          <div class="row" style="margin-top:10px">
+            <input type="text" id="join-name" placeholder="Your name" maxlength="24">
+            <button class="btn" onclick="joinLeague()">Join</button>
+          </div>
+          <div id="resume-area" style="margin-top:10px"></div>
+        </div>`;
+    }
     updateCapdock();
     return;
   }
@@ -342,6 +358,16 @@ function renderMarket(){
     }).join('');
     return rows ? `<h3 class="tier">${label}</h3><table class="ptable"><tbody>${rows}</tbody></table>` : '';
   }).join('');
+}
+
+async function resumeByName(){
+  const name = $('join-name').value.trim();
+  if(!name){ toast('Enter your manager name'); return; }
+  try{
+    const rows = await sb('/dodgers_managers?name=eq.'+encodeURIComponent(name));
+    if(rows.length){ await resumeAs(rows[0]); }
+    else toast('No manager by that name — the league is locked to new joins');
+  }catch(e){ toast('Could not look that up — try again'); }
 }
 
 async function joinLeague(){
@@ -559,8 +585,8 @@ function renderRules(){
   $('view-rules').innerHTML = `
   <div class="card rules">
     <h2>📖 How It Works</h2>
-    <p>Everyone gets <b>$100</b> to buy a squad of <b>6 Dodgers</b> — at least 2 pitchers and 2 hitters (Ohtani counts as both). Better players cost more, so building a winner means finding value. Multiple managers can own the same player.</p>
-    <p>Once you <b>lock in</b>, your squad is final. Points come from real MLB games from <b>July 30 through the end of the regular season</b>. Highest total wins. 🏆</p>
+    <p>Everyone got <b>$100</b> to buy a squad of <b>6 Dodgers</b> — at least 2 pitchers and 2 hitters (Ohtani counts as both). Better players cost more, so building a winner meant finding value. Multiple managers can own the same player.</p>
+    <p>The league is now <b>locked 🔒</b> — all squads are final and no new managers can join. Points come from real MLB games from <b>July 30 through the end of the regular season</b>. Highest total wins. 🏆</p>
     <h2 style="margin-top:16px">🏏 Hitter Scoring</h2>
     <table><tr><td>Single</td><td><b>+3</b></td><td>Double</td><td><b>+5</b></td></tr>
     <tr><td>Triple</td><td><b>+8</b></td><td>Home run</td><td><b>+10</b></td></tr>
