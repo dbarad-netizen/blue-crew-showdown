@@ -154,6 +154,15 @@
     display:flex; justify-content:space-around; align-items:center; box-shadow:0 -6px 20px rgba(0,0,0,.45);}
   .capdock .lab{font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; font-weight:700; display:block; text-align:center;}
   .capdock .val{font-family:var(--disp); font-size:21px; text-align:center; display:block;}
+  .jontag{display:inline-block; background:rgba(167,139,250,.18); color:#c4b5fd; font-size:9px; font-weight:900;
+    border-radius:6px; padding:2px 6px; margin-left:5px; vertical-align:1px; letter-spacing:.5px;}
+  .joncard{background:linear-gradient(135deg, rgba(167,139,250,.14), rgba(88,52,150,.1)); border:1.5px solid rgba(167,139,250,.4);
+    border-radius:18px; padding:13px 15px; margin:2px 0 12px; box-shadow:0 0 20px rgba(167,139,250,.12);}
+  .joncard .jt{font-family:var(--disp); font-size:19px; letter-spacing:1.5px; color:#c4b5fd;}
+  .joncard .js{display:flex; gap:14px; margin:7px 0 6px; flex-wrap:wrap;}
+  .joncard .js b{font-family:var(--disp); font-size:20px; color:var(--ink); display:block; letter-spacing:.5px;}
+  .joncard .js span{font-size:9.5px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; font-weight:800;}
+  .joncard .snark{font-size:12.5px; color:#d9ccf5; font-style:italic; margin-top:4px;}
   #clinchbar{background:linear-gradient(90deg,#8a6408,#e3a812,#ffd766,#e3a812,#8a6408); background-size:200% 100%;
     animation:shimmer 7s linear infinite; color:#241a02; text-align:center; font-weight:800; padding:9px 12px;
     font-size:13px; letter-spacing:.3px; box-shadow:0 2px 12px rgba(227,168,18,.35);}
@@ -205,6 +214,43 @@ const AVA_BG  = ['#123a5e','#4a1d2e','#4a3a12','#12402b','#2f2354','#42122e','#0
 const RING_SVG = '<svg width="30" height="30" viewBox="0 0 64 64"><circle cx="32" cy="42" r="16" fill="none" stroke="#e3a812" stroke-width="9"/><circle cx="32" cy="42" r="16" fill="none" stroke="#ffd766" stroke-width="3"/><rect x="13" y="4" width="38" height="32" rx="9" fill="#0e4da0" stroke="#ffc84a" stroke-width="5"/><text x="32" y="28" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-size="17" font-weight="900" fill="#ffd766">LA</text><circle cx="21" cy="9.5" r="1.8" fill="#fff"/><circle cx="32" cy="8" r="1.8" fill="#fff"/><circle cx="43" cy="9.5" r="1.8" fill="#fff"/><circle cx="15.5" cy="20" r="1.8" fill="#fff"/><circle cx="48.5" cy="20" r="1.8" fill="#fff"/><circle cx="21" cy="30.5" r="1.8" fill="#fff"/><circle cx="43" cy="30.5" r="1.8" fill="#fff"/></svg>';
 const AVATAR_OVERRIDES = { 'blow me':'🍆', 'eat me':'🍆', 'lick me':'🍆', 'db':RING_SVG };
 function hashName(n){ let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))>>>0; return h; }
+/* ---------- the Jon Index™ ---------- */
+const JON_TEAMS = new Set(['lick me','blow me','eat me']);
+function normName(n){ return (n||'').toLowerCase().replace(/[^a-z ]/g,'').replace(/\s+/g,' ').trim(); }
+function isJon(n){ return JON_TEAMS.has(normName(n)); }
+function jonTag(n){ return isJon(n) ? '<span class="jontag">🍆 JON³</span>' : ''; }
+function jonIndexCard(rows){
+  // rows: [{m:{name}, total}] already sorted desc by total
+  const jons = rows.map((r,i)=>({ name:r.m.name, total:r.total, rank:i+1 })).filter(r=>isJon(r.name));
+  if(jons.length < 2) return '';
+  const combined = Math.round(jons.reduce((s,r)=>s+r.total,0)*10)/10;
+  const best = Math.min(...jons.map(r=>r.rank));
+  const n = rows.length;
+  const allBottomHalf = jons.every(r=>r.rank > n/2);
+  const lines = [
+    'Three teams. One Jon. Zero rings.',
+    'Diversification is not a strategy, Jon.',
+    'Even the eggplants are embarrassed.',
+    'Three lineups, one group chat, no accountability.',
+    'Somewhere out there is a fourth name Jon is saving for 2027.',
+    'One man. Three teams. Statistically still beatable.',
+  ];
+  let snark;
+  if(best === 1) snark = 'Ugh. Fine. A Jon team is actually winning. We&#39;ll allow it. 🙄';
+  else if(allBottomHalf) snark = 'All three Jon teams in the bottom half — a true triple play. 👏';
+  else { const day = Math.floor(Date.now()/86400000); snark = lines[day % lines.length]; }
+  return `<div class="joncard">
+    <div class="jt">🍆🍆🍆 THE JON INDEX™</div>
+    <div class="muted" style="font-size:11.5px">One manager. Three teams. Lick Me, Blow Me! &amp; Eat Me — tracked as a single franchise for accountability purposes.</div>
+    <div class="js">
+      <div><b>${combined}</b><span>combined pts</span></div>
+      <div><b>#${best}</b><span>best rank</span></div>
+      <div><b>3×</b><span>entries</span></div>
+      <div><b>0</b><span>titles</span></div>
+    </div>
+    <div class="snark">“${snark}”</div>
+  </div>`;
+}
 function avatarFor(n){
   const key = (n||'').toLowerCase().replace(/[^a-z ]/g,'').replace(/\s+/g,' ').trim();
   const h = hashName(n||'?');
@@ -668,7 +714,7 @@ async function renderBoard(){
           <div class="lb-head" onclick="this.parentNode.querySelector('.lb-detail').style.display = this.parentNode.querySelector('.lb-detail').style.display==='block'?'none':'block'">
             ${i<3 ? `<div class="medal">${medals[i]}</div>` : `<div class="ranknum">${i+1}</div>`}
             <div class="avatar" style="background:${av.bg}">${av.emo}</div>
-            <div class="lb-name">${i===0&&r.total>0?'👑 ':''}${esc(r.m.name)}${hot}
+            <div class="lb-name">${i===0&&r.total>0?'👑 ':''}${esc(r.m.name)}${jonTag(r.m.name)}${hot}
               <div class="rbreak">${chips}</div></div>
             <div style="text-align:right"><div class="lb-pts" data-t="${r.total}">0</div>
               <div class="lb-today">${r.dayTotal ? fmtToday(r.dayTotal)+' today' : '<span class="muted">— today</span>'}</div></div>
@@ -676,7 +722,7 @@ async function renderBoard(){
           <div class="lb-bar ${i===0?'':'blue'}"><div style="width:${(r.total/max)*100}%"></div></div>
           <div class="lb-detail">${detail}</div>
         </div>`;
-      }).join('') +
+      }).join('') + jonIndexCard(rows) +
       `<p class="muted" style="text-align:center">Running October total • NLCS ×1.5 • World Series ×2 • ↩ = rolled-over squad<br>
       <button class="btn secondary small" style="margin-top:8px" onclick="ptsCache={};renderBoard()">↻ Refresh</button></p>`;
     v.querySelectorAll('.lb-pts').forEach(countUp);
@@ -726,7 +772,7 @@ async function renderSeasonBoard(toggles){
           <div class="lb-head" onclick="this.parentNode.querySelector('.lb-detail').style.display = this.parentNode.querySelector('.lb-detail').style.display==='block'?'none':'block'">
             ${i<3 ? `<div class="medal">${medals[i]}</div>` : `<div class="ranknum">${i+1}</div>`}
             <div class="avatar" style="background:${av.bg}">${av.emo}</div>
-            <div class="lb-name">${i===0?(seasonOver?'🏆 ':'👑 '):''}${esc(r.m.name)}${hot}<span style="display:block;font-size:11px;font-weight:600;color:var(--muted)">${i===0?(seasonOver?'REGULAR SEASON CHAMPION':'leading the race'):(seasonOver?'final':'chasing')}</span></div>
+            <div class="lb-name">${i===0?(seasonOver?'🏆 ':'👑 '):''}${esc(r.m.name)}${jonTag(r.m.name)}${hot}<span style="display:block;font-size:11px;font-weight:600;color:var(--muted)">${i===0?(seasonOver?'REGULAR SEASON CHAMPION':'leading the race'):(seasonOver?'final':(isJon(r.m.name)?'out of it 🪦':'chasing'))}</span></div>
             <div style="text-align:right"><div class="lb-pts" data-t="${r.total}">0</div>
               ${seasonOver?'':`<div class="lb-today">${r.dayTotal ? fmtToday(r.dayTotal)+' today' : '<span class="muted">— today</span>'}</div>`}</div>
           </div>
@@ -742,7 +788,7 @@ async function renderSeasonBoard(toggles){
             : '<p class="muted">No players drafted.</p>'}
           </div>
         </div>`;
-      }).join('') +
+      }).join('') + jonIndexCard(rows) +
       (seasonOver
         ? `<p class="muted" style="text-align:center">The banner hangs forever. October is a new race. 🏆</p>`
         : `<p class="muted" style="text-align:center">Points from real games since Jul 30 • final standings lock Sep 27<br>
