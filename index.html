@@ -154,6 +154,11 @@
     display:flex; justify-content:space-around; align-items:center; box-shadow:0 -6px 20px rgba(0,0,0,.45);}
   .capdock .lab{font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; font-weight:700; display:block; text-align:center;}
   .capdock .val{font-family:var(--disp); font-size:21px; text-align:center; display:block;}
+  #clinchbar{background:linear-gradient(90deg,#8a6408,#e3a812,#ffd766,#e3a812,#8a6408); background-size:200% 100%;
+    animation:shimmer 7s linear infinite; color:#241a02; text-align:center; font-weight:800; padding:9px 12px;
+    font-size:13px; letter-spacing:.3px; box-shadow:0 2px 12px rgba(227,168,18,.35);}
+  @keyframes shimmer{ to{ background-position:200% 0; } }
+  body.october #clinchbar{display:none;}
 </style>
 </head>
 <body>
@@ -162,6 +167,7 @@
   <div class="sub" id="subline">DODGERS REST-OF-SEASON LEAGUE</div>
   <div class="roundstrip" id="roundstrip"></div>
 </header>
+<div id="clinchbar">🎉 CLINCHED! The Dodgers are October-bound — a record-tying 14th straight postseason ⚾💙</div>
 <nav>
   <button id="tab-squad" class="active" onclick="showTab('squad')">My Squad</button>
   <button id="tab-board" onclick="showTab('board')">Leaderboard</button>
@@ -836,7 +842,7 @@ function octoberRulesCard(open){
     ${open ? '' : '<p class="muted">A preview of what happens if the Dodgers punch their ticket. Registration opens when the postseason schedule is set.</p>'}
     <p>Fresh draft every playoff round: <b>$${PO_BUDGET}, ${PO_SIZE} players</b> (at least ${PO_MIN_P} pitcher and ${PO_MIN_H} hitters — Ohtani counts as both). The market is <b>re-priced each round</b> on current form — October heroes get expensive, cold bats get cheap.</p>
     <p>Each round&#39;s draft window opens when the series is set and <b>locks automatically at first pitch of Game 1</b>. Miss the window and your previous round&#39;s squad rides again (↩). Save as many times as you like before the lock.</p>
-    <p>Round points scale: <b style="color:var(--gold)">Wild Card ×1 • NLDS ×1 • NLCS ×1.5 • World Series ×2</b>. One running October total crowns the champion when the run ends. Same scoring as the regular season${open ? '' : ' (below)'}. The trade-deadline arms — yes, including Skubal — join the player pool.</p>
+    <p>Round points scale: <b style="color:var(--gold)">Wild Card ×1 • NLDS ×1 • NLCS ×1.5 • World Series ×2</b>. One running October total crowns the champion when the run ends. Same scoring as the regular season${open ? '' : ' (above)'}. The trade-deadline arms — yes, including Skubal — join the player pool.</p>
     ${open ? scoringTables() : ''}
     ${open ? '<p class="muted" style="margin-top:12px">The regular-season final standings live forever under Leaderboard → 🏁 Regular Season.</p>' : ''}
   </div>`;
