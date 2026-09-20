@@ -200,6 +200,7 @@ const SEASON_START = "2026-07-30", SEASON_FINAL = "2026-09-27";   // regular-sea
 let rounds = [], poPlayers = [], poPrices = [], managers = [], allPoPicks = [];
 let me = null, myPicks = [];       // myPicks = player ids for the current draft round
 let boardMode = 'october';
+let playersMode = 'season';
 let ptsCache = {}, ptsCacheTime = {};
 let seasonData = null;             // lazy: {players, picks, pts}
 
@@ -677,6 +678,22 @@ async function renderBoard(){
   if(boardMode==='season'){ renderSeasonBoard(toggles); return; }
   const started = startedRounds();
   if(!started.length){
+    const d = draftRound();
+    if(d){
+      const subs = managers.map(m=>({ m, inYet: allPoPicks.some(p=>p.manager_id===m.id && p.round_id===d.id) }));
+      const nIn = subs.filter(s=>s.inYet).length;
+      v.innerHTML = toggles + `
+        <div class="note">🤫 <b>${esc(d.name)} drafts are in progress</b> — squads stay hidden until first pitch
+        (${new Date(d.lock_at).toLocaleString([], {weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit'})}).
+        No peeking, no copying homework.</div>
+        <div class="card"><h2>📥 Squads Submitted — ${nIn}/${subs.length}</h2>
+        ${subs.map(sx=>{ const av = avatarFor(sx.m.name);
+          return `<div class="roster-chip"><span class="prow"><div class="avatar" style="width:34px;height:34px;font-size:17px;background:${av.bg}">${av.emo}</div>
+            <span>${esc(sx.m.name)}${jonTag(sx.m.name)}</span></span>
+            <span class="pill ${sx.inYet?'ok':'warn'}">${sx.inYet?'✅ Squad in':'⏳ Drafting'}</span></div>`; }).join('')}
+        <p class="muted" style="margin-top:8px">Everyone&#39;s picks are revealed here at first pitch. Miss the lock and your previous round&#39;s squad rides again (↩) — or sits out round one.</p></div>`;
+      return;
+    }
     v.innerHTML = toggles + `<div class="card" style="text-align:center"><span class="lockbadge">🎃</span>
       <p class="muted">October scoring begins with the first playoff game.<br>Meanwhile — ${todayStr() > SEASON_FINAL ? 'relive' : 'enjoy'} the regular season ${todayStr() > SEASON_FINAL ? '🏁' : '⚾'}</p></div>`;
     return;
@@ -801,7 +818,14 @@ async function renderSeasonBoard(toggles){
 async function renderPlayers(){
   const v = $('view-players');
   const disp = displayRound() || draftRound();
-  if(!disp){ await renderSeasonPlayers(v); return; }
+  if(!disp){
+    const toggles = `<div class="toggles">
+      <div class="tog ${playersMode==='season'?'on':''}" onclick="playersMode='season';renderPlayers()">🏁 Regular Season</div>
+      <div class="tog ${playersMode==='pool'?'on':''}" onclick="playersMode='pool';renderPlayers()">🏆 October Pool</div>
+    </div>`;
+    if(playersMode==='pool'){ renderOctoberPool(v, toggles); return; }
+    await renderSeasonPlayers(v, toggles); return;
+  }
   const pm = priceMap(disp.id), prev = priceMap(disp.id-1);
   const priced = poPlayers.filter(p=>pm[p.id]!=null);
   if(!priced.length){
@@ -832,8 +856,8 @@ async function renderPlayers(){
 }
 
 /* ---------- regular-season player board (pre-October) ---------- */
-async function renderSeasonPlayers(v){
-  v.innerHTML = '<div class="spin">Loading player board… 🧮</div>';
+async function renderSeasonPlayers(v, toggles=''){
+  v.innerHTML = toggles + '<div class="spin">Loading player board… 🧮</div>';
   try{
     const t = todayStr(), seasonOver = t > SEASON_FINAL;
     const end = seasonOver ? SEASON_FINAL : t;
@@ -845,7 +869,7 @@ async function renderSeasonPlayers(v){
       if(!seasonOver) todayPts[p.id] = (await fetchRange(p.id, t, t)).pts;
     }));
     const sorted = [...players].sort((a,b)=>(pts[b.id]?.pts||0)-(pts[a.id]?.pts||0) || (b.price||0)-(a.price||0));
-    v.innerHTML = `<div class="card"><h2>📊 Player Board</h2>
+    v.innerHTML = toggles + `<div class="card"><h2>📊 Player Board</h2>
       <p class="muted">${seasonOver ? 'Final regular-season points vs. what they cost.' : 'Rest-of-season points vs. what they cost. Find the steals.'}</p>
       <table class="ptable"><thead><tr><th>Player</th><th>Cost</th>${seasonOver?'':'<th style="text-align:right">Today</th>'}<th style="text-align:right">Total</th></tr></thead><tbody>
       ${sorted.map(p=>{
@@ -855,7 +879,26 @@ async function renderSeasonPlayers(v){
         <td class="price">$${p.price??0}</td>${seasonOver?'':`<td style="text-align:right">${fmtToday(todayPts[p.id])}</td>`}
         <td style="text-align:right;font-weight:800">${pts[p.id]?.pts??0}</td></tr>`;}).join('')}
       </tbody></table></div>`;
-  }catch(e){ v.innerHTML = `<div class="card"><p class="muted">Couldn&#39;t load the player board (${esc(e.message)}).</p></div>`; }
+  }catch(e){ v.innerHTML = toggles + `<div class="card"><p class="muted">Couldn&#39;t load the player board (${esc(e.message)}).</p></div>`; }
+}
+
+/* ---------- October pool browser (pre-round scouting) ---------- */
+function renderOctoberPool(v, toggles=''){
+  const pm1 = priceMap(1);
+  const hasPrices = Object.keys(pm1).length > 0;
+  const groups = [['💎 THE TWO-WAY GUY', p=>p.role==='twp'], ['🏏 HITTERS', p=>p.role==='hitter'], ['🎯 PITCHERS', p=>p.role==='pitcher']];
+  v.innerHTML = toggles + `<div class="card"><h2>🏆 October Player Pool</h2>
+    <p class="muted">Scout the postseason pool now — including the trade-deadline arms. ${hasPrices
+      ? 'Wild Card prices are posted below.'
+      : 'Round-by-round prices drop when each series is set.'} Fresh $${PO_BUDGET} draft, ${PO_SIZE} players per round.</p>
+    ${groups.map(([label, f])=>{
+      const rows = poPlayers.filter(f).sort((a,b)=> (hasPrices ? (pm1[b.id]||0)-(pm1[a.id]||0) : a.name.localeCompare(b.name))).map(p=>`
+        <tr><td><span class="prow">${headshot(p.id,34)}<span>${esc(p.name)}<span class="pos">${p.pos}</span>${statusTag(p)}</span></span></td>
+        <td class="price" style="text-align:right">${hasPrices ? (pm1[p.id]!=null ? '$'+pm1[p.id] : '—') : ''}</td></tr>`).join('');
+      return rows ? `<h3 class="tier">${label}</h3><table class="ptable"><tbody>${rows}</tbody></table>` : '';
+    }).join('')}
+    <p class="muted" style="margin-top:10px">🤫 Draft squads stay hidden until first pitch of each round — no copying homework.</p>
+  </div>`;
 }
 
 /* ---------- rules ---------- */
@@ -887,7 +930,7 @@ function octoberRulesCard(open){
     <h2>🏆 ${open ? 'October Format' : 'Coming in October — the Playoff Edition'}</h2>
     ${open ? '' : '<p class="muted">A preview of what happens if the Dodgers punch their ticket. Registration opens when the postseason schedule is set.</p>'}
     <p>Fresh draft every playoff round: <b>$${PO_BUDGET}, ${PO_SIZE} players</b> (at least ${PO_MIN_P} pitcher and ${PO_MIN_H} hitters — Ohtani counts as both). The market is <b>re-priced each round</b> on current form — October heroes get expensive, cold bats get cheap.</p>
-    <p>Each round&#39;s draft window opens when the series is set and <b>locks automatically at first pitch of Game 1</b>. Miss the window and your previous round&#39;s squad rides again (↩). Save as many times as you like before the lock.</p>
+    <p>Each round&#39;s draft window opens when the series is set and <b>locks automatically at first pitch of Game 1</b>. Miss the window and your previous round&#39;s squad rides again (↩). Save as many times as you like before the lock — but <b>everyone&#39;s squads stay hidden until first pitch</b>, and nobody can enter or change a squad after it. 🤫</p>
     <p>Round points scale: <b style="color:var(--gold)">Wild Card ×1 • NLDS ×1 • NLCS ×1.5 • World Series ×2</b>. One running October total crowns the champion when the run ends. Same scoring as the regular season${open ? '' : ' (above)'}. The trade-deadline arms — yes, including Skubal — join the player pool.</p>
     ${open ? scoringTables() : ''}
     ${open ? '<p class="muted" style="margin-top:12px">The regular-season final standings live forever under Leaderboard → 🏁 Regular Season.</p>' : ''}
