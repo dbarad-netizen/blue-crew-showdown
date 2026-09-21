@@ -319,6 +319,25 @@ function renderRoundStrip(){
 /* ---------- identity ---------- */
 function loadMe(){ try{ return JSON.parse(localStorage.getItem('bcs_me')); }catch(e){ return null; } }
 function saveMe(m){ localStorage.setItem('bcs_me', JSON.stringify(m)); me = m; }
+async function joinLeague(){
+  const name = $('join-name').value.trim();
+  if(!name){ toast('Enter your name first'); return; }
+  try{
+    const rows = await sb('/dodgers_managers', { method:'POST', body: JSON.stringify({name}) });
+    saveMe(rows[0]); myPicks = [];
+    managers.push(rows[0]);
+    renderSquad(); toast('Welcome to October, '+name+'! 🎃 Draft your squad below.');
+  }catch(e){
+    if(String(e).includes('23505') || String(e).includes('duplicate')){
+      // Name exists — treat it as a resume
+      const existing = await sb('/dodgers_managers?name=eq.'+encodeURIComponent(name));
+      if(existing.length){ saveMe(existing[0]); await loadMyRoundPicks(); renderSquad(); toast('Welcome back, '+existing[0].name+'! 🧢'); return; }
+      toast('Could not join — try a different name');
+    } else if(String(e).includes('403') || String(e).includes('row-level')){
+      toast('Registration is closed — first pitch has passed.');
+    } else toast('Could not join: '+e.message);
+  }
+}
 async function resumeByName(){
   const name = $('join-name').value.trim();
   if(!name){ toast('Enter your manager name'); return; }
@@ -461,16 +480,34 @@ async function loadSeasonCore(){
 async function renderSquad(){
   const v = $('view-squad');
   if(!me){
-    v.innerHTML = `
-      <div class="card" style="text-align:center">
-        <span class="lockbadge">🔒</span>
-        <h2 style="text-align:center">League is locked</h2>
-        <p class="muted">Original managers only. Already in the league on another phone? Enter your name to pick up your squad:</p>
-        <div class="row" style="margin-top:8px">
-          <input type="text" id="join-name" placeholder="Your manager name" maxlength="24">
-          <button class="btn secondary" onclick="resumeByName()">Resume</button>
-        </div>
-      </div>`;
+    const d = draftRound();
+    if(d){
+      v.innerHTML = `
+        <div class="card" style="text-align:center">
+          <span class="lockbadge">🎟️</span>
+          <h2 style="text-align:center">October registration is open</h2>
+          <p class="muted">Didn&#39;t play the regular season? Doesn&#39;t matter — October is a fresh race.
+          Join now and draft your ${esc(d.name)} squad: <b style="color:var(--ink)">$${PO_BUDGET}, ${PO_SIZE} players</b>.
+          Registration closes at first pitch
+          (${new Date(d.lock_at).toLocaleString([], {weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit'})}).</p>
+          <div class="row" style="margin-top:10px">
+            <input type="text" id="join-name" placeholder="Your name" maxlength="24">
+            <button class="btn gold" onclick="joinLeague()">Join</button>
+          </div>
+          <p class="muted" style="margin-top:12px">Already in the league? Type your exact manager name and hit Join — we&#39;ll recognize you.</p>
+        </div>`;
+    } else {
+      v.innerHTML = `
+        <div class="card" style="text-align:center">
+          <span class="lockbadge">🔒</span>
+          <h2 style="text-align:center">Registration closed</h2>
+          <p class="muted">New managers can join when the next round&#39;s draft window opens. Already in the league on another phone? Enter your name to pick up your squad:</p>
+          <div class="row" style="margin-top:8px">
+            <input type="text" id="join-name" placeholder="Your manager name" maxlength="24">
+            <button class="btn secondary" onclick="resumeByName()">Resume</button>
+          </div>
+        </div>`;
+    }
     updateCapdock('squad'); return;
   }
   const av = avatarFor(me.name);
