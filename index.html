@@ -234,13 +234,13 @@ const RING_SVG = '<svg width="30" height="30" viewBox="0 0 64 64"><circle cx="32
 const AVATAR_OVERRIDES = { 'blow me':'🍆', 'eat me':'🍆', 'lick me':'🍆', 'db':RING_SVG, 'claude':'🤖' };
 /* Custom Blue Crew bobbleheads (files in avatars/). Head shots for round avatars, full figures for squad pages.
    Mapping is per manager name (normalized) — update these two maps to assign/reassign bobbleheads. */
-const AVATAR_IMG  = { 'gregory brenner':'avatars/a1-head.webp', 'brett':'avatars/a6-head.webp', 'driverwedge':'avatars/a3-head.webp' };
-const AVATAR_FULL = { 'gregory brenner':'avatars/a1-full.webp', 'brett':'avatars/a6-full.webp', 'driverwedge':'avatars/a3-full.webp' };
+const AVATAR_IMG  = { 'gregory brenner':'avatars/a1-head.webp', 'brett':'avatars/a6-head.webp', 'driverwedge':'avatars/a3-head.webp', 'db':'avatars/a7-head.webp' };
+const AVATAR_FULL = { 'gregory brenner':'avatars/a1-full.webp', 'brett':'avatars/a6-full.webp', 'driverwedge':'avatars/a3-full.webp', 'db':'avatars/a7-full.webp' };
 const SHELF = [
   ['avatars/a1-full.webp','The Shouter','Gregory Brenner'], ['avatars/a2-full.webp','Boxer Shorts Guy','also Gregory Brenner'],
   ['avatars/a3-full.webp','The Natural','Driverwedge'], ['avatars/a4-full.webp','Whiskey &amp; Wins','Driverwedge again'],
   ['avatars/a5-full.webp','Two-Way Threat','Jon — still 🍆'], ['avatars/a6-full.webp','Hollywood','Brett'],
-  ['avatars/a7-full.webp','Brooklyn','Official Team Mascot 🐾'],
+  ['avatars/a7-full.webp','Brooklyn','DB — Official Team Mascot 🐾'],
 ];
 function hashName(n){ let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))>>>0; return h; }
 /* ---------- the Jon Index™ ---------- */
