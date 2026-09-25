@@ -121,11 +121,19 @@
   @keyframes bobble{0%,100%{transform:rotate(0)} 22%{transform:rotate(-8deg)} 48%{transform:rotate(6deg)} 74%{transform:rotate(-3deg)}}
   .bobstand{height:86px; flex-shrink:0; filter:drop-shadow(0 6px 12px rgba(0,0,0,.5));}
   .bobstand:hover{animation:bobble .7s ease-in-out;}
-  .shelf{display:flex; gap:10px; justify-content:center; align-items:flex-end; flex-wrap:wrap; margin-top:10px;
-    padding:14px 8px 6px; border-radius:14px; background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.25));}
-  .shelf img{height:108px; filter:drop-shadow(0 8px 14px rgba(0,0,0,.55)); transition:transform .25s;}
-  .shelf img:hover{transform:translateY(-6px) rotate(-3deg);}
-  .shelfbase{height:7px; margin:0 4px; border-radius:4px; background:linear-gradient(180deg,#3a4a63,#1a2536); border-top:1px solid rgba(255,255,255,.25);}
+  .shelf{display:flex; flex-wrap:wrap; gap:18px 6px; justify-content:center;
+    margin-top:12px; padding:18px 10px 10px; border-radius:14px 14px 0 0;
+    background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.25));}
+  .shelf-item{display:flex; flex-direction:column; align-items:center; text-align:center; width:104px;}
+  .shelf-fig{height:128px; width:100%; display:flex; align-items:flex-end; justify-content:center; position:relative;}
+  .shelf-fig::after{content:''; position:absolute; bottom:-7px; left:50%; transform:translateX(-50%);
+    width:70%; height:12px; border-radius:50%; background:radial-gradient(ellipse, rgba(0,0,0,.55), transparent 70%);}
+  .shelf-fig img{max-height:128px; max-width:96%; position:relative; z-index:1;
+    filter:drop-shadow(0 6px 8px rgba(0,0,0,.45)); transition:transform .25s;}
+  .shelf-item:hover .shelf-fig img{transform:translateY(-6px) rotate(-3deg);}
+  .shelf-cap{font-size:10px; font-weight:800; letter-spacing:.5px; color:var(--muted); margin-top:10px; line-height:1.3;}
+  .shelf-who{font-size:9.5px; color:var(--gold); margin-top:1px; line-height:1.3;}
+  .shelfbase{height:8px; border-radius:0 0 6px 6px; background:linear-gradient(180deg,#3a4a63,#1a2536); border-top:1px solid rgba(255,255,255,.28);}
   .medal{font-size:24px; width:28px; text-align:center; flex-shrink:0;}
   .ranknum{font-family:var(--disp); font-size:18px; color:var(--muted); width:28px; text-align:center; flex-shrink:0;}
   .lb-name{font-weight:800; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; font-size:15px; color:#fff;}
@@ -231,7 +239,7 @@ const AVATAR_FULL = { 'gregory brenner':'avatars/a1-full.webp', 'brett':'avatars
 const SHELF = [
   ['avatars/a1-full.webp','The Shouter','Gregory Brenner'], ['avatars/a2-full.webp','Boxer Shorts Guy','also Gregory Brenner'],
   ['avatars/a3-full.webp','The Natural','Driverwedge'], ['avatars/a4-full.webp','Whiskey &amp; Wins','Driverwedge again'],
-  ['avatars/a5-full.webp','Two-Way Threat','Jon — still an 🍆 in the standings'], ['avatars/a6-full.webp','Hollywood','Brett'],
+  ['avatars/a5-full.webp','Two-Way Threat','Jon — still 🍆'], ['avatars/a6-full.webp','Hollywood','Brett'],
   ['avatars/a7-full.webp','Brooklyn','Official Team Mascot 🐾'],
 ];
 function hashName(n){ let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))>>>0; return h; }
@@ -280,8 +288,8 @@ function avatarFor(n){
 function avatarHtml(n, size){
   const av = avatarFor(n);
   const sz = size ? `width:${size}px;height:${size}px;font-size:${Math.round(size/2)}px;` : '';
-  const img = av.img ? `<img class="bob" src="${av.img}" alt="" loading="lazy" onerror="this.remove()">` : '';
-  return `<div class="avatar" style="${sz}background:${av.bg}">${av.emo}${img}</div>`;
+  if(!av.img) return `<div class="avatar" style="${sz}background:${av.bg}">${av.emo}</div>`;
+  return `<div class="avatar" style="${sz}background:${av.bg}"><span style="visibility:hidden">${av.emo}</span><img class="bob" src="${av.img}" alt="" loading="lazy" onerror="this.previousElementSibling.style.visibility='';this.remove()"></div>`;
 }
 function bobStand(n){
   // Full bobblehead figure for squad headers — falls back to the round avatar if unmapped or missing.
@@ -1013,9 +1021,8 @@ function shelfCard(){
     <h2>🧢 The Clubhouse Shelf</h2>
     <p class="muted" style="margin-top:2px">Limited-edition Blue Crew bobbleheads. Collect all seven. Trades not accepted.</p>
     <div class="shelf">${SHELF.map(([src,cap,who])=>`
-      <span style="text-align:center;max-width:120px"><img src="${src}" alt="" loading="lazy" onerror="this.parentNode.remove()">
-      <span style="display:block;font-size:10px;font-weight:800;letter-spacing:.5px;color:var(--muted);margin-top:4px">${cap}</span>
-      ${who?`<span style="display:block;font-size:9.5px;color:var(--gold);margin-top:1px">${who}</span>`:''}</span>`).join('')}
+      <div class="shelf-item"><div class="shelf-fig"><img src="${src}" alt="" loading="lazy" onerror="this.closest('.shelf-item').remove()"></div>
+      <span class="shelf-cap">${cap}</span>${who?`<span class="shelf-who">${who}</span>`:''}</div>`).join('')}
     </div>
     <div class="shelfbase"></div>
   </div>`;
