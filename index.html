@@ -231,7 +231,7 @@ const AVATAR_FULL = { 'gregory brenner':'avatars/a1-full.webp' };
 const SHELF = [
   ['avatars/a1-full.webp','The Shouter'], ['avatars/a2-full.webp','Boxer Shorts Guy'],
   ['avatars/a3-full.webp','The Natural'], ['avatars/a4-full.webp','Whiskey &amp; Wins'],
-  ['avatars/a5-full.webp','Two-Way Threat'],
+  ['avatars/a5-full.webp','Two-Way Threat'], ['avatars/a6-full.webp','Hollywood'],
 ];
 function hashName(n){ let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))>>>0; return h; }
 /* ---------- the Jon Index™ ---------- */
@@ -1010,7 +1010,7 @@ function shelfCard(){
   return `
   <div class="card">
     <h2>🧢 The Clubhouse Shelf</h2>
-    <p class="muted" style="margin-top:2px">Limited-edition Blue Crew bobbleheads. Collect all five. Trades not accepted.</p>
+    <p class="muted" style="margin-top:2px">Limited-edition Blue Crew bobbleheads. Collect all six. Trades not accepted.</p>
     <div class="shelf">${SHELF.map(([src,cap])=>`
       <span style="text-align:center"><img src="${src}" alt="" loading="lazy" onerror="this.parentNode.remove()">
       <span style="display:block;font-size:10px;font-weight:800;letter-spacing:.5px;color:var(--muted);margin-top:4px">${cap}</span></span>`).join('')}
