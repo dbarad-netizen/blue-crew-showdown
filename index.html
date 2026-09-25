@@ -115,7 +115,17 @@
   .lb-item.leader{border:1.5px solid rgba(255,200,74,.65); box-shadow:0 0 24px rgba(255,200,74,.2);}
   .lb-head{display:flex; align-items:center; gap:10px; padding:13px; cursor:pointer;}
   .avatar{width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-    font-size:21px; flex-shrink:0; border:2px solid rgba(255,255,255,.2);}
+    font-size:21px; flex-shrink:0; border:2px solid rgba(255,255,255,.2); position:relative; overflow:hidden;}
+  .avatar img.bob{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:50%;}
+  .lb-head:hover .avatar img.bob, .roster-chip:hover .avatar img.bob{animation:bobble .7s ease-in-out;}
+  @keyframes bobble{0%,100%{transform:rotate(0)} 22%{transform:rotate(-8deg)} 48%{transform:rotate(6deg)} 74%{transform:rotate(-3deg)}}
+  .bobstand{height:86px; flex-shrink:0; filter:drop-shadow(0 6px 12px rgba(0,0,0,.5));}
+  .bobstand:hover{animation:bobble .7s ease-in-out;}
+  .shelf{display:flex; gap:10px; justify-content:center; align-items:flex-end; flex-wrap:wrap; margin-top:10px;
+    padding:14px 8px 6px; border-radius:14px; background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.25));}
+  .shelf img{height:108px; filter:drop-shadow(0 8px 14px rgba(0,0,0,.55)); transition:transform .25s;}
+  .shelf img:hover{transform:translateY(-6px) rotate(-3deg);}
+  .shelfbase{height:7px; margin:0 4px; border-radius:4px; background:linear-gradient(180deg,#3a4a63,#1a2536); border-top:1px solid rgba(255,255,255,.25);}
   .medal{font-size:24px; width:28px; text-align:center; flex-shrink:0;}
   .ranknum{font-family:var(--disp); font-size:18px; color:var(--muted); width:28px; text-align:center; flex-shrink:0;}
   .lb-name{font-weight:800; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; font-size:15px; color:#fff;}
@@ -214,6 +224,15 @@ const AVATARS = ['🧢','⚾','🔥','🐐','🚀','🎯','🦾','🌴','🏆','
 const AVA_BG  = ['#123a5e','#4a1d2e','#4a3a12','#12402b','#2f2354','#42122e','#0e3a52','#3a4212','#3f1c3a','#26364a','#0e4238','#4a3512'];
 const RING_SVG = '<svg width="30" height="30" viewBox="0 0 64 64"><circle cx="32" cy="42" r="16" fill="none" stroke="#e3a812" stroke-width="9"/><circle cx="32" cy="42" r="16" fill="none" stroke="#ffd766" stroke-width="3"/><rect x="13" y="4" width="38" height="32" rx="9" fill="#0e4da0" stroke="#ffc84a" stroke-width="5"/><text x="32" y="28" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-size="17" font-weight="900" fill="#ffd766">LA</text><circle cx="21" cy="9.5" r="1.8" fill="#fff"/><circle cx="32" cy="8" r="1.8" fill="#fff"/><circle cx="43" cy="9.5" r="1.8" fill="#fff"/><circle cx="15.5" cy="20" r="1.8" fill="#fff"/><circle cx="48.5" cy="20" r="1.8" fill="#fff"/><circle cx="21" cy="30.5" r="1.8" fill="#fff"/><circle cx="43" cy="30.5" r="1.8" fill="#fff"/></svg>';
 const AVATAR_OVERRIDES = { 'blow me':'🍆', 'eat me':'🍆', 'lick me':'🍆', 'db':RING_SVG, 'claude':'🤖' };
+/* Custom Blue Crew bobbleheads (files in avatars/). Head shots for round avatars, full figures for squad pages.
+   Mapping is per manager name (normalized) — update these two maps to assign/reassign bobbleheads. */
+const AVATAR_IMG  = { 'gregory brenner':'avatars/a1-head.webp' };
+const AVATAR_FULL = { 'gregory brenner':'avatars/a1-full.webp' };
+const SHELF = [
+  ['avatars/a1-full.webp','The Shouter'], ['avatars/a2-full.webp','Boxer Shorts Guy'],
+  ['avatars/a3-full.webp','The Natural'], ['avatars/a4-full.webp','Whiskey &amp; Wins'],
+  ['avatars/a5-full.webp','Two-Way Threat'],
+];
 function hashName(n){ let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))>>>0; return h; }
 /* ---------- the Jon Index™ ---------- */
 const JON_TEAMS = new Set(['lick me','blow me','eat me']);
@@ -255,7 +274,20 @@ function jonIndexCard(rows){
 function avatarFor(n){
   const key = (n||'').toLowerCase().replace(/[^a-z ]/g,'').replace(/\s+/g,' ').trim();
   const h = hashName(n||'?');
-  return {emo: AVATAR_OVERRIDES[key] || AVATARS[h%AVATARS.length], bg:AVA_BG[(h>>4)%AVA_BG.length]};
+  return {emo: AVATAR_OVERRIDES[key] || AVATARS[h%AVATARS.length], bg:AVA_BG[(h>>4)%AVA_BG.length], img:AVATAR_IMG[key]||null};
+}
+function avatarHtml(n, size){
+  const av = avatarFor(n);
+  const sz = size ? `width:${size}px;height:${size}px;font-size:${Math.round(size/2)}px;` : '';
+  const img = av.img ? `<img class="bob" src="${av.img}" alt="" loading="lazy" onerror="this.remove()">` : '';
+  return `<div class="avatar" style="${sz}background:${av.bg}">${av.emo}${img}</div>`;
+}
+function bobStand(n){
+  // Full bobblehead figure for squad headers — falls back to the round avatar if unmapped or missing.
+  const f = AVATAR_FULL[normName(n)];
+  if(!f) return avatarHtml(n);
+  return `<img class="bobstand" src="${f}" alt="" loading="lazy"
+    onerror="this.nextElementSibling.style.display='';this.remove()"><span style="display:none">${avatarHtml(n)}</span>`;
 }
 
 async function sb(path, opts={}){
@@ -527,7 +559,7 @@ async function renderSquad(){
         Fresh $${PO_BUDGET}, pick ${PO_SIZE}. ${fmtMult(d.multiplier) ? 'Points count '+fmtMult(d.multiplier)+' this round.' : ''}</div>
       <div class="card">
         <div class="row" style="justify-content:space-between">
-          <div class="row"><div class="avatar" style="background:${av.bg}">${av.emo}</div>
+          <div class="row">${bobStand(me.name)}
             <h2 style="margin:0">${esc(me.name)}&#39;s ${esc(d.code)} Squad</h2></div>
           <span class="pill warn">Drafting</span>
         </div>
@@ -561,7 +593,7 @@ async function renderSquad(){
     v.innerHTML = `
       <div class="card">
         <div class="row" style="justify-content:space-between">
-          <div class="row"><div class="avatar" style="background:${av.bg}">${av.emo}</div>
+          <div class="row">${bobStand(me.name)}
             <h2 style="margin:0">${esc(me.name)}&#39;s ${esc(disp.code)} Squad</h2></div>
           <span class="pill ok">🔒 Locked</span>
         </div>
@@ -586,7 +618,7 @@ async function renderSquad(){
     v.innerHTML = `
       <div class="card">
         <div class="row" style="justify-content:space-between">
-          <div class="row"><div class="avatar" style="background:${av.bg}">${av.emo}</div>
+          <div class="row">${bobStand(me.name)}
             <h2 style="margin:0">${esc(me.name)}&#39;s Squad</h2></div>
           <span class="pill ok">🔒 Locked</span>
         </div>
@@ -724,8 +756,8 @@ async function renderBoard(){
         (${new Date(d.lock_at).toLocaleString([], {weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit'})}).
         No peeking, no copying homework.</div>
         <div class="card"><h2>📥 Squads Submitted — ${nIn}/${subs.length}</h2>
-        ${subs.map(sx=>{ const av = avatarFor(sx.m.name);
-          return `<div class="roster-chip"><span class="prow"><div class="avatar" style="width:34px;height:34px;font-size:17px;background:${av.bg}">${av.emo}</div>
+        ${subs.map(sx=>{
+          return `<div class="roster-chip"><span class="prow">${avatarHtml(sx.m.name,34)}
             <span>${esc(sx.m.name)}${jonTag(sx.m.name)}</span></span>
             <span class="pill ${sx.inYet?'ok':'warn'}">${sx.inYet?'✅ Squad in':'⏳ Drafting'}</span></div>`; }).join('')}
         <p class="muted" style="margin-top:8px">Everyone&#39;s picks are revealed here at first pitch. Miss the lock and your previous round&#39;s squad rides again (↩) — or sits out round one.</p></div>`;
@@ -767,7 +799,7 @@ async function renderBoard(){
         <div class="lb-item ${i===0&&r.total>0?'leader':''}" style="animation-delay:${i*70}ms">
           <div class="lb-head" onclick="this.parentNode.querySelector('.lb-detail').style.display = this.parentNode.querySelector('.lb-detail').style.display==='block'?'none':'block'">
             ${i<3 ? `<div class="medal">${medals[i]}</div>` : `<div class="ranknum">${i+1}</div>`}
-            <div class="avatar" style="background:${av.bg}">${av.emo}</div>
+            ${avatarHtml(r.m.name)}
             <div class="lb-name">${i===0&&r.total>0?'👑 ':''}${esc(r.m.name)}${jonTag(r.m.name)}${hot}
               <div class="rbreak">${chips}</div></div>
             <div style="text-align:right"><div class="lb-pts" data-t="${r.total}">0</div>
@@ -826,7 +858,7 @@ async function renderSeasonBoard(toggles){
         <div class="lb-item ${i===0?'leader':''}" style="animation-delay:${i*70}ms">
           <div class="lb-head" onclick="this.parentNode.querySelector('.lb-detail').style.display = this.parentNode.querySelector('.lb-detail').style.display==='block'?'none':'block'">
             ${i<3 ? `<div class="medal">${medals[i]}</div>` : `<div class="ranknum">${i+1}</div>`}
-            <div class="avatar" style="background:${av.bg}">${av.emo}</div>
+            ${avatarHtml(r.m.name)}
             <div class="lb-name">${i===0?(seasonOver?'🏆 ':'👑 '):''}${esc(r.m.name)}${jonTag(r.m.name)}${hot}<span style="display:block;font-size:11px;font-weight:600;color:var(--muted)">${i===0?(seasonOver?'REGULAR SEASON CHAMPION':'leading the race'):(seasonOver?'final':(isJon(r.m.name)?'out of it 🪦':'chasing'))}</span></div>
             <div style="text-align:right"><div class="lb-pts" data-t="${r.total}">0</div>
               ${seasonOver?'':`<div class="lb-today">${r.dayTotal ? fmtToday(r.dayTotal)+' today' : '<span class="muted">— today</span>'}</div>`}</div>
@@ -974,10 +1006,22 @@ function octoberRulesCard(open){
     ${open ? '<p class="muted" style="margin-top:12px">The regular-season final standings live forever under Leaderboard → 🏁 Regular Season.</p>' : ''}
   </div>`;
 }
+function shelfCard(){
+  return `
+  <div class="card">
+    <h2>🧢 The Clubhouse Shelf</h2>
+    <p class="muted" style="margin-top:2px">Limited-edition Blue Crew bobbleheads. Collect all five. Trades not accepted.</p>
+    <div class="shelf">${SHELF.map(([src,cap])=>`
+      <span style="text-align:center"><img src="${src}" alt="" loading="lazy" onerror="this.parentNode.remove()">
+      <span style="display:block;font-size:10px;font-weight:800;letter-spacing:.5px;color:var(--muted);margin-top:4px">${cap}</span></span>`).join('')}
+    </div>
+    <div class="shelfbase"></div>
+  </div>`;
+}
 function renderRules(){
-  $('view-rules').innerHTML = octoberMode()
+  $('view-rules').innerHTML = (octoberMode()
     ? octoberRulesCard(true) + seasonRulesCard()
-    : seasonRulesCard() + octoberRulesCard(false);
+    : seasonRulesCard() + octoberRulesCard(false)) + shelfCard();
 }
 
 /* ---------- boot ---------- */
