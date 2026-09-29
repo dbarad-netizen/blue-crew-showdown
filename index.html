@@ -241,6 +241,7 @@ const SHELF = [
   ['avatars/a3-full.webp','The Natural','Driverwedge'], ['avatars/a4-full.webp','Whiskey &amp; Wins','Driverwedge again'],
   ['avatars/a5-full.webp','Two-Way Threat','Jon — still 🍆'], ['avatars/a6-full.webp','Hollywood','Brett'],
   ['avatars/a7-full.webp','Brooklyn','DB — Official Team Mascot 🐾'],
+  ['avatars/a8-full.webp','The Foam Finger','Hope to see you back soon 💙'],
 ];
 function hashName(n){ let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))>>>0; return h; }
 /* ---------- the Jon Index™ ---------- */
@@ -1019,7 +1020,7 @@ function shelfCard(){
   return `
   <div class="card">
     <h2>🧢 The Clubhouse Shelf</h2>
-    <p class="muted" style="margin-top:2px">Limited-edition Blue Crew bobbleheads. Collect all seven. Trades not accepted.</p>
+    <p class="muted" style="margin-top:2px">Limited-edition Blue Crew bobbleheads. Collect all eight. Trades not accepted.</p>
     <div class="shelf">${SHELF.map(([src,cap,who])=>`
       <div class="shelf-item"><div class="shelf-fig"><img src="${src}" alt="" loading="lazy" onerror="this.closest('.shelf-item').remove()"></div>
       <span class="shelf-cap">${cap}</span>${who?`<span class="shelf-who">${who}</span>`:''}</div>`).join('')}
