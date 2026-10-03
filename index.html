@@ -449,7 +449,7 @@ async function fetchRange(id, start, end){
   const key = `${id}|${start}|${end}`;
   if(ptsCache[key] && nowMs()-ptsCacheTime[key] < 5*60*1000) return ptsCache[key];
   try{
-    const r = await fetch(`https://statsapi.mlb.com/api/v1/people/${id}/stats?stats=byDateRange&group=hitting,pitching&startDate=${fmtDate(start)}&endDate=${fmtDate(end)}&season=2026`);
+    const r = await fetch(`https://statsapi.mlb.com/api/v1/people/${id}/stats?stats=byDateRange&group=hitting,pitching&startDate=${fmtDate(start)}&endDate=${fmtDate(end)}&season=2026&gameType=R,F,D,L,W`);
     const res = rangePoints(await r.json());
     ptsCache[key] = res; ptsCacheTime[key] = nowMs();
     return res;
